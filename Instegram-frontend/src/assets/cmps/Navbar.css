@@ -1,0 +1,22 @@
+.navbar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    background-color: var(--color1);
+    border-right: 2px solid black;
+
+
+    height: 100vh;
+    width: 200px;
+}
+
+.navbar-container #navbar-list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.navbar-container .logo {
+    margin-bottom: 20px;
+}
