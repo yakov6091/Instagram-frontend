@@ -15,17 +15,14 @@ export function App() {
                     <Routes>
                         <Route element={<HomePage />} path="/"></Route>
                         {/* <Route element={<Profile />} path="/:id"></Route> */}
-
                     </Routes>
-
                 </main>
 
+                <footer>
 
+                </footer>
             </Router>
-
         </section>
-
-
     )
 
 

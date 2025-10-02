@@ -1,0 +1,141 @@
+/* ------------------------------------
+          1. Header Styling (Name, Time, Follow)
+    ------------------------------------
+ */
+
+.story-card-container .header-container {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    font-size: 14px;
+}
+
+.header-container::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    border-radius: 50%;
+    margin-right: 12px;
+    border: 2px solid white;
+    outline: 1px solid #ccc;
+}
+
+.name {
+    font-weight: 600;
+    color: var(--color2);
+    margin-right: 8px;
+}
+
+.time {
+    font-size: 12px;
+    color: #8e8e8e;
+    font-weight: 400;
+    margin-right: auto;
+    /* Pushes the follow button to the right */
+}
+
+.header-container button {
+    background: none;
+    border: none;
+    color: var(--second-color1);
+    /* Standard Instagram blue */
+    font-weight: 600;
+    cursor: pointer;
+    padding: 4px 8px;
+    margin-left: 10px;
+    outline: none;
+    transition: opacity 0.1s;
+}
+
+.header-container button:hover {
+    opacity: 0.7;
+}
+
+/* ------------------------------------
+          2. Image/Content Styling
+    ------------------------------------
+ */
+
+.img-container {
+    width: 100%;
+    /* Use a 4:5 aspect ratio (common for mobile IG posts) */
+    aspect-ratio: 4/5;
+    overflow: hidden;
+    background-color: #efefef;
+}
+
+.img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Ensures the image covers the area gracefully */
+    display: block;
+}
+
+/* ------------------------------------
+          3. Action Buttons Styling
+          ------------------------------------
+        */
+.button-container {
+    display: flex;
+    align-items: center;
+    padding: 8px 10px;
+}
+
+.button-container button {
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 4px 8px;
+    color: var(--color2);
+    transition: transform 0.1s;
+}
+
+/* ------------------------------------
+          4. Likes & Comments Area Styling
+------------------------------------
+*/
+.like-span {
+    padding: 0 14px;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #262626;
+}
+
+.likes-count {
+    font-weight: 600;
+    /* Highlight the number of likes */
+}
+
+/* The div that contains the comments input */
+.comment-area {
+    padding: 0 14px 10px 14px;
+}
+
+.comments-container {
+    /* This is where existing comments would be rendered */
+    min-height: 20px;
+}
+
+.comment-area>div {
+    /* Separator between content and comment input */
+    border-top: 1px solid #efefef;
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+.comment {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    padding: 5px 0;
+    color: var(--color2);
+}
+
+.comment::placeholder {
+    color: var(--color3);
+}

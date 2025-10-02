@@ -1,8 +1,14 @@
+import { StoryList } from "../cmps/StoryList"
+import { useState } from "react"
 
 
 export function HomePage() {
+
     return (
-        <h1>hello asd</h1>
+        <section className="story-container">
+            <StoryList />
+
+        </section>
     )
 
 }
