@@ -1,0 +1,5 @@
+.main-layout {
+    display: grid;
+    grid-template-columns: 1fr 250px;
+    height: 100vh;
+}
