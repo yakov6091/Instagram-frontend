@@ -1,4 +1,5 @@
 import { HomePage } from "./pages/HomePage"
+import { ProfilePage } from "./pages/ProfilePage"
 import { NavBar } from "./cmps/NavBar"
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 
@@ -14,7 +15,7 @@ export function App() {
                 <main>
                     <Routes>
                         <Route element={<HomePage />} path="/"></Route>
-                        {/* <Route element={<Profile />} path="/:id"></Route> */}
+                        <Route element={<ProfilePage />} path="/:profile_id"></Route>
                     </Routes>
                 </main>
 

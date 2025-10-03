@@ -6,7 +6,6 @@ export function ProfilePage() {
     return (
         <section className="profile-container">
             <Profile />
-
         </section>
     )
 
