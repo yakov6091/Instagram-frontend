@@ -1,5 +1,5 @@
 
-
+import { Svgs } from "./Svg"
 export function StoryCard({ story }) {
 
     return (
@@ -16,9 +16,9 @@ export function StoryCard({ story }) {
             </div>
 
             <div className="button-container">
-                <button>Like</button>
-                <button>Comment</button>
-                <button>Save</button>
+                <button>{Svgs.like}</button>
+                <button>{Svgs.comment}</button>
+                <button>{Svgs.save}</button>
             </div>
 
             <div className="like-span">

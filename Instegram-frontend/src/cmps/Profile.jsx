@@ -1,5 +1,5 @@
 
-
+import { Svgs } from "./Svg"
 export function Profile() {
     return (
         <section className="profile-container">
@@ -11,9 +11,9 @@ export function Profile() {
                 <div className="profile-details">
                     <h2 className="profile-name">Name</h2>
                     <div className="profile-stats">
-                        <span><b>0</b> posts</span>
-                        <span><b>0</b> followers</span>
-                        <span><b>0</b> following</span>
+                        <span><b>{0}</b> posts</span>
+                        <span><b>{0}</b> followers</span>
+                        <span><b>{0}</b> following</span>
                     </div>
                 </div>
 
@@ -24,8 +24,8 @@ export function Profile() {
 
             <div className="profile-gallery">
                 <div className="gallery-tabs">
-                    <button>Posts</button>
-                    <button>Saved</button>
+                    <button>{Svgs.gallery}</button>
+                    <button>{Svgs.save}</button>
                 </div>
             </div>
         </section>

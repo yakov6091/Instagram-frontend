@@ -1,4 +1,6 @@
+import { Svgs } from './Svg'
 import { Link } from 'react-router-dom'
+
 
 export function NavBar() {
 
@@ -7,8 +9,8 @@ export function NavBar() {
             <Link to="/" className="logo">Logo</Link>
 
             <ul id="navbar-list" className="right">
-                <li><Link to="/"> Home</Link></li>
-                <li><Link to="#"> Profile</Link></li>
+                <li>{Svgs.home}<Link to="/"> Home</Link></li>
+                <li>{Svgs.profile}<Link to="#"> Profile</Link></li>
             </ul>
         </section>
 
