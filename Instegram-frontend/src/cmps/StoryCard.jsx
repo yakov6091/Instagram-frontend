@@ -38,9 +38,8 @@ export function StoryCard({ story }) {
 
             <div className="button-container">
                 <button
-                    onClick={handleLike}
-                    style={{ color: liked ? "red" : "inherit" }}>
-                    {Svgs.like}</button>
+                    onClick={handleLike}>
+                    {liked ? Svgs.likeFilled : Svgs.likeOutLine}</button>
 
                 <button>{Svgs.comment}</button>
                 <button>{Svgs.save}</button>
