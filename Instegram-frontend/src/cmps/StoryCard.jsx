@@ -5,12 +5,14 @@ export function StoryCard({ story }) {
         txt,
         imgUrl,
         by,
-        comments = [],
+        comments: initialComments = [],
         likedBy = [],
     } = story;
 
     const [liked, setLiked] = useState(false)
     const [likes, setLikes] = useState(likedBy.length)
+    const [comments, setComments] = useState(initialComments)
+    const [commentTxt, setCommentTxt] = useState('')
 
     function handleLike() {
         if (liked) {
@@ -20,6 +22,23 @@ export function StoryCard({ story }) {
             setLiked(true)
             setLikes(likes + 1)
         }
+    }
+
+    function handleCommentChange(ev) {
+        setCommentTxt(ev.target.value)
+    }
+
+    function handleAddComment(ev) {
+        ev.preventDefault()
+        if (!commentTxt.trim()) return
+        const newComment = {
+            id: Date.now().toString(),
+            by: { fullname: 'You' },
+            txt: commentTxt
+        }
+        setComments([...comments, newComment])
+        setCommentTxt('')
+
     }
 
 
@@ -49,6 +68,10 @@ export function StoryCard({ story }) {
                 <span className="likes-count">{likes} </span>Likes
             </div>
 
+            <div className="story-txt">
+                <span><b>{by.fullname}</b>: {txt}</span>
+            </div>
+
             <div>
                 <div className="comments-container">
                     {comments && comments.map(comment => (
@@ -57,7 +80,16 @@ export function StoryCard({ story }) {
                         </div>
                     ))}
                 </div>
-                <input type="text" placeholder="Add a comment" className="comment" />
+
+                <form onSubmit={handleAddComment}>
+                    <input
+                        type="text"
+                        placeholder="Add a comment"
+                        className="comment"
+                        value={commentTxt}
+                        onChange={handleCommentChange} />
+                </form>
+
             </div>
 
         </section >

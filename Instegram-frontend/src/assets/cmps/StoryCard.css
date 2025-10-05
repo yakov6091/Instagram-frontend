@@ -139,3 +139,10 @@
 .comment::placeholder {
     color: var(--color3);
 }
+
+.story-txt {
+    margin: 8px 0 0 0;
+    color: var(--color2);
+    font-size: 1rem;
+    margin-bottom: 10px;
+}

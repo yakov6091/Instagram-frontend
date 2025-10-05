@@ -1,6 +1,6 @@
 export const story = {
 	_id: 's101',
-	txt: 'Lake trip with the best 🩷',
+	txt: 'The sun is looking fire 🩷',
 	imgUrl: 'https://petapixel.com/assets/uploads/2024/01/The-Star-of-System-Sol-Rectangle-640x800.jpg',
 	by: {
 		_id: 'u101',
