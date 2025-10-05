@@ -5,7 +5,7 @@ export function StoryCard({ story }) {
         txt,
         imgUrl,
         by,
-        comments: initialComments = [],
+        comments: initialComments = [], // Use story.comments if they exist, otherwise start with an empty []
         likedBy = [],
     } = story;
 
