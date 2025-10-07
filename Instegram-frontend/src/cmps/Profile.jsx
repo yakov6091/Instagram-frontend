@@ -13,7 +13,7 @@ export function Profile() {
 
     function handleImgChange(ev) {
         const file = ev.target.files[0]
-        console.log(file)
+        // console.log(file)
         if (file) {
             const reader = new FileReader()
             reader.onload = () => {
@@ -69,12 +69,10 @@ export function Profile() {
                 <div className="gallery-tabs">
                     <button>{Svgs.gallery}</button>
                     <button>{Svgs.save}</button>
-
-
                 </div>
+
                 <form className="add-post-form" onSubmit={handleAddPost} style={{ margin: "16px 0" }}>
                     <input type="file" accept="image/*" onChange={handleImgChange} />
-
                     <input
                         type="text"
                         placeholder="Write a caption..."
@@ -83,6 +81,7 @@ export function Profile() {
                     />
                     <button type="submit">Post</button>
                 </form>
+
                 <StoryList stories={galleryPosts} />
             </div>
         </section>

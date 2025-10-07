@@ -46,9 +46,10 @@ export function StoryCard({ story }) {
         <section className="story-card-container">
 
             <header className="header-container">
+                <img className="profile-thumb" src={by.imgUrl} />
                 <span className="name">{by.fullname}</span>
                 <span className="time">Now</span>
-                <button>Follow</button>
+                {Svgs.dots}
             </header>
 
             <div className="img-container">
@@ -69,7 +70,7 @@ export function StoryCard({ story }) {
             </div>
 
             <div className="story-txt">
-                <span><b>{by.fullname}</b>: {txt}</span>
+                <span><b>{by.fullname}</b>  {txt}</span>
             </div>
 
             <div>
