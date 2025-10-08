@@ -1,15 +1,15 @@
 import { use, useState } from "react"
 import { StoryList } from "./StoryList"
 import { Svgs } from "./Svg"
-import { story } from '../../data/story.js'
+import { story, user } from '../../data/story.js'
 
 export function Profile() {
     const [galleryPosts, setGalleryPosts] = useState([])
     const [imgFile, setImgFile] = useState(null)
     const [caption, setCaption] = useState('')
 
-    // Get the user from the story object
-    const user = story.by
+    // Get the userDetailsdetails from the story object
+    const userDetails = story.by
 
     function handleImgChange(ev) {
         const file = ev.target.files[0]
@@ -32,9 +32,9 @@ export function Profile() {
             imgUrl: imgFile,
             txt: caption,
             by: {
-                _id: user._id,
-                fullname: user.fullname,
-                imgUrl: user.imgUrl,
+                _id: userDetails._id,
+                fullname: userDetails.fullname,
+                imgUrl: userDetails.imgUrl,
             },
             likedBy: [],
             comments: []
@@ -48,11 +48,14 @@ export function Profile() {
         <section className="profile-container">
             <div className="profile-header-row">
                 <div className="profile-image">
-                    <img src="" alt="" />
+                    <img
+                        className="profile-img"
+                        src={user.imgUrl || "https://i.imgur.com/8Km9tLL.png"}
+                    />
                 </div>
 
                 <div className="profile-details">
-                    <h2 className="profile-name">{user.fullname}</h2>
+                    <h2 className="profile-name">{userDetails.fullname}</h2>
                     <div className="profile-stats">
                         <span><b>{galleryPosts.length}</b> posts</span>
                         <span><b>{0}</b> followers</span>

@@ -11,13 +11,10 @@
 }
 
 .profile-thumb {
-    width: 32px;
-    height: 32px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid white;
-    outline: 1px solid #ccc;
-    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
 }
 
 .name {
@@ -91,6 +88,12 @@
     margin-left: auto;
 }
 
+.button-container button.liked svg {
+    fill: red !important;
+    color: red !important;
+    transition: fill 0.2s;
+}
+
 /* ---------------------------------
     4. Likes & Comments Area Styling
    ------------------------------------
@@ -100,6 +103,11 @@
     font-size: 14px;
     margin-bottom: 4px;
     color: var(--color2);
+}
+
+.liked {
+    transition: transform 0.1s;
+    transform: scale(1.2);
 }
 
 .likes-count {

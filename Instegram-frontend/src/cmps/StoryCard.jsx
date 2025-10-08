@@ -46,18 +46,19 @@ export function StoryCard({ story }) {
         <section className="story-card-container">
 
             <header className="header-container">
-                <img className="profile-thumb" src={by.imgUrl} />
+                <img className="profile-thumb" src={imgUrl} />
                 <span className="name">{by.fullname}</span>
                 <span className="time">Now</span>
                 {Svgs.dots}
             </header>
 
             <div className="img-container">
-                <img src={imgUrl} alt="image" />
+                <img src={imgUrl} />
             </div>
 
             <div className="button-container">
                 <button
+                    className={liked ? "liked" : ""}
                     onClick={handleLike}>
                     {liked ? Svgs.likeFilled : Svgs.likeOutLine}</button>
 

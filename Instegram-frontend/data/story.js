@@ -63,7 +63,7 @@ export const user = {
 	username: 'sunflower_power77',
 	password: 'mukmuk',
 	fullname: 'sunflower_power77 from CA.',
-	imgUrl: 'http://some-img',
+	imgUrl: 'https://petapixel.com/assets/uploads/2024/01/The-Star-of-System-Sol-Rectangle-640x800.jpg',
 
 
 	following: [
