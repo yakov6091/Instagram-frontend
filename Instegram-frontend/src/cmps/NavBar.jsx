@@ -11,7 +11,7 @@ export function NavBar({ onNewPost }) {
         <>
             <nav className="navbar-container">
                 <div className="navbar-logo">
-                    <Link to="/" className="logo-text">Logo</Link>
+                    <Link to="/" className="logo-text">{Svgs.instagram}</Link>
                 </div>
 
                 <ul className="navbar-list">

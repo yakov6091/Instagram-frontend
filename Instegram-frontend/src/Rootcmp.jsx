@@ -2,9 +2,9 @@ import { HomePage } from "./pages/HomePage"
 import { ProfilePage } from "./pages/ProfilePage"
 import { NavBar } from "./cmps/NavBar"
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
+import { useState } from "react"
 
 import './assets/main.css'
-import { useState } from "react"
 
 export function App() {
     const [posts, setPosts] = useState([])
