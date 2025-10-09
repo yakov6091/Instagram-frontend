@@ -4,24 +4,13 @@ import { Svgs } from "./Svg"
 import { story, user } from '../../data/story.js'
 
 export function Profile() {
-    const [galleryPosts, setGalleryPosts] = useState([])
+    const [galleryPosts, setGalleryPosts] = useState(user.posts)
+    console.log(galleryPosts)
     const [imgFile, setImgFile] = useState(null)
     const [caption, setCaption] = useState('')
 
     // Get the userDetailsdetails from the story object
     const userDetails = story.by
-
-    function handleImgChange(ev) {
-        const file = ev.target.files[0]
-        // console.log(file)
-        if (file) {
-            const reader = new FileReader()
-            reader.onload = () => {
-                setImgFile(reader.result)
-            }
-            reader.readAsDataURL(file)
-        }
-    }
 
     function handleAddPost(ev) {
         ev.preventDefault()
@@ -58,8 +47,8 @@ export function Profile() {
                     <h2 className="profile-name">{userDetails.fullname}</h2>
                     <div className="profile-stats">
                         <span><b>{galleryPosts.length}</b> posts</span>
-                        <span><b>{0}</b> followers</span>
-                        <span><b>{0}</b> following</span>
+                        <span><b>{user.followers.length}</b> followers</span>
+                        <span><b>{user.followers.length}</b> following</span>
                     </div>
                 </div>
 
@@ -74,18 +63,20 @@ export function Profile() {
                     <button>{Svgs.save}</button>
                 </div>
 
-                <form className="add-post-form" onSubmit={handleAddPost} style={{ margin: "16px 0" }}>
-                    <input type="file" accept="image/*" onChange={handleImgChange} />
-                    <input
-                        type="text"
-                        placeholder="Write a caption..."
-                        value={caption}
-                        onChange={ev => setCaption(ev.target.value)}
-                    />
-                    <button type="submit">Post</button>
-                </form>
-
-                <StoryList stories={galleryPosts} />
+                {galleryPosts.length > 0 ? (
+                    <div className="post-grid">
+                        {galleryPosts.map(post => (
+                            <div key={post._id} className="post-item">
+                                <img
+                                    src={post.thumbnailUrl || post.imgUrl}
+                                    className="post-thumbnail"
+                                />
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p className="no-posts-message">No posts yet.</p>
+                )}
             </div>
         </section>
     )

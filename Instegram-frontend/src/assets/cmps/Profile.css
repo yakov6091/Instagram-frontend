@@ -2,47 +2,51 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding: 20px 20px;
+    padding: 24px 0;
     background: var(--color1);
-    border-radius: 16px;
-    max-width: 600px;
-    margin: auto;
+    border-radius: 0;
+    max-width: 935px;
+    margin: 30px auto;
 }
 
 .profile-header-row {
     display: flex;
-    align-items: center;
-    gap: 32px;
-    margin-bottom: 16px;
-
+    align-items: flex-start;
+    gap: 100px;
+    padding: 0 40px;
 }
 
 .profile-img {
-    width: 120px;
-    height: 120px;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
     object-fit: cover;
-
+    flex-shrink: 0;
 }
 
-.profile-details {
+.profile-details h1,
+.profile-details h2 {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    align-items: center;
+    gap: 20px;
+    margin: 0;
 }
 
 .profile-name {
-    font-size: 1.2rem;
-    font-weight: 700;
+    font-size: 1.8rem;
+    font-weight: 300;
 }
 
 .profile-stats {
     display: flex;
-    gap: 20px;
-    font-size: 1.1rem;
+    gap: 40px;
+    font-size: 1rem;
+    margin-top: 10px;
 }
 
 .profile-stats span {
+    display: flex;
+    gap: 5px;
     color: var(--color2);
 }
 
@@ -54,21 +58,26 @@
 /*Gallery section*/
 .profile-gallery {
     width: 100%;
-    margin-top: 32px;
+    margin-top: 44px;
 }
 
+/*  Gallery Tabs */
 .gallery-tabs {
     display: flex;
-    gap: 16px;
-    margin-bottom: 16px;
+    justify-content: center;
+    gap: 60px;
+    margin-bottom: 0;
+    padding-top: 10px;
+    border-bottom: 2px solid black;
 }
+
 
 .gallery-tabs button {
     background: none;
     border: none;
     font-size: 1rem;
     font-weight: 600;
-    color: #888;
+    color: var(--color2);
     cursor: pointer;
     padding: 8px 16px;
     border-bottom: 2px solid transparent;
@@ -76,14 +85,34 @@
 }
 
 .gallery-tabs button.active {
-    color: #262626;
-    border-bottom: 2px solid #262626;
+    color: var(--color2);
+    border-bottom: 2px solid var(--color2);
 }
 
+/*Gallery Content*/
 .gallery-content {
-    min-height: 120px;
-    background: #fafafa;
-    border-radius: 8px;
-    padding: 24px;
+    min-height: 200px;
+    padding: 0;
     text-align: center;
+}
+
+.post-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    width: 100%;
+}
+
+.post-item {
+    width: 100%;
+    aspect-ratio: 1 / 2;
+    /* keeps them square */
+    overflow: hidden;
+}
+
+.post-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }

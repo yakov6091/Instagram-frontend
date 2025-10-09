@@ -1,13 +1,25 @@
-.main-layout {
-    display: grid;
-    grid-template-columns: 250px 1fr 250px;
-    /* Sidebar, Center, Right */
-    min-height: 100vh;
+/* Sidebar stays fixed */
+.navbar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    border-right: 1px solid var(--color1);
+    background-color: var(--color1);
 }
 
-.main-layout> :nth-child(2) {
-    justify-self: center;
-    /* Center the middle column content */
-    width: 500px;
-    /* Keep your feed width */
+/* Main content area shifts right to make space for sidebar */
+.main-layout {
+    display: flex;
+    justify-content: center;
+    margin-left: 250px;
+    min-height: 100vh;
+
 }
+
+/* Optional: center your main feed content */
+/* .main-layout>* {
+    width: 500px;
+    max-width: 90vw;
+} */

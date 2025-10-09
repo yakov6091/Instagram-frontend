@@ -3,16 +3,26 @@ import { Link } from 'react-router-dom'
 
 
 export function NavBar() {
-
     return (
-        <section className="navbar-container">
-            <Link to="/" className="logo">Logo</Link>
+        <nav className="navbar-container">
+            <div className="navbar-logo">
+                <Link to="/" className="logo-text">Logo</Link>
+            </div>
 
-            <ul id="navbar-list" className="right">
-                <li>{Svgs.home}<Link to="/"> Home</Link></li>
-                <li>{Svgs.profile}<Link to="#"> Profile</Link></li>
+            <ul className="navbar-list">
+                <li>
+                    <Link to="/">
+                        {Svgs.home}
+                        <span>Home</span>
+                    </Link>
+                </li>
+                <li>
+                    <Link to="/profile">
+                        {Svgs.profile}
+                        <span>Profile</span>
+                    </Link>
+                </li>
             </ul>
-        </section>
-
+        </nav>
     )
 }
