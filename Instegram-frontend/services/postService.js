@@ -1,5 +1,5 @@
 import { storageService } from "./async-storage.service";
-import { loadFromStorage, makeId, saveToStorage } from "./util.service";
+import { loadFromStorage, makeId, saveToStorage } from "./util";
 
 const POST_KEY = 'POST_DB'
 _createPosts()
