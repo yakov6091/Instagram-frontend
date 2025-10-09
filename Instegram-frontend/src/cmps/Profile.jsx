@@ -5,33 +5,10 @@ import { story, user } from '../../data/story.js'
 
 export function Profile() {
     const [galleryPosts, setGalleryPosts] = useState(user.posts)
-    console.log(galleryPosts)
-    const [imgFile, setImgFile] = useState(null)
-    const [caption, setCaption] = useState('')
 
     // Get the userDetailsdetails from the story object
     const userDetails = story.by
 
-    function handleAddPost(ev) {
-        ev.preventDefault()
-        if (!imgFile) return
-
-        const newPost = {
-            _id: Date.now().toString(),
-            imgUrl: imgFile,
-            txt: caption,
-            by: {
-                _id: userDetails._id,
-                fullname: userDetails.fullname,
-                imgUrl: userDetails.imgUrl,
-            },
-            likedBy: [],
-            comments: []
-        }
-        setGalleryPosts([newPost, ...galleryPosts])
-        setImgFile(null)
-        setCaption('')
-    }
 
     return (
         <section className="profile-container">
@@ -39,7 +16,7 @@ export function Profile() {
                 <div className="profile-image">
                     <img
                         className="profile-img"
-                        src={user.imgUrl || "https://i.imgur.com/8Km9tLL.png"}
+                        src={user.imgUrl}
                     />
                 </div>
 
@@ -68,7 +45,7 @@ export function Profile() {
                         {galleryPosts.map(post => (
                             <div key={post._id} className="post-item">
                                 <img
-                                    src={post.thumbnailUrl || post.imgUrl}
+                                    src={post.thumbnailUrl}
                                     className="post-thumbnail"
                                 />
                             </div>
@@ -80,5 +57,4 @@ export function Profile() {
             </div>
         </section>
     )
-
 }
