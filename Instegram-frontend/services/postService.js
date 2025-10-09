@@ -132,7 +132,7 @@ function _createPosts() {
                 by: {
                     _id: 'u101',
                     fullname: 'sunflower_power77',
-                    imgUrl: 'http://some-img',
+                    imgUrl: 'https://petapixel.com/assets/uploads/2024/01/The-Star-of-System-Sol-Rectangle-640x800.jpg',
                 },
                 loc: {
                     lat: 11.11,
