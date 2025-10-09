@@ -62,11 +62,12 @@ export const user = {
 	_id: 'u101',
 	username: 'sunflower_power77',
 	password: 'mukmuk',
+	// bio: 'Hello World!',
 	fullname: 'sunflower_power77 from CA.',
 	imgUrl: 'https://petapixel.com/assets/uploads/2024/01/The-Star-of-System-Sol-Rectangle-640x800.jpg',
 	posts: [
 		{ _id: 'p101', thumbnailUrl: 'https://petapixel.com/assets/uploads/2024/01/The-Star-of-System-Sol-Rectangle-640x800.jpg', isVideo: false },
-		{ _id: 'p102', thumbnailUrl: 'https://petapixel.com/assets/uploads/2021/03/sonya1pickfeat-800x420.jpg', isVideo: true },
+		{ _id: 'p102', thumbnailUrl: 'https://petapixel.com/assets/uploads/2021/03/sonya1pickfeat-800x420.jpg', isVideo: false },
 
 	],
 

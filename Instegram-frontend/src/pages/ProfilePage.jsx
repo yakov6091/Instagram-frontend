@@ -9,6 +9,4 @@ export function ProfilePage() {
         </section>
     )
 
-
-
 }
