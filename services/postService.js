@@ -11,8 +11,9 @@ const tags = [
     'fun',
     'books',
     'romantic',
-    'art'
+    'art',
 ]
+console.log('hi');
 
 // postservice export
 export const postService = {
