@@ -2,6 +2,7 @@ import { Svgs } from './Svg'
 import { Link } from 'react-router-dom'
 import { CreatePost } from '../cmps/CreatePost'
 import { useState } from 'react'
+import { user } from '../../data/story'
 
 
 export function NavBar({ onNewPost }) {
@@ -22,19 +23,21 @@ export function NavBar({ onNewPost }) {
                         </Link>
                     </li>
                     <li>
-                        <Link to="/profile">
-                            {Svgs.profile}
-                            <span>Profile</span>
-                        </Link>
-                    </li>
-                    <li>
-                        <button
+                        <Link
                             className="create-post-btn"
                             onClick={() => setShowCreatePost(!showCreatePost)}
                         >
                             {Svgs.add}
                             <span>New Post</span>
-                        </button>
+                        </Link>
+
+                    </li>
+                    <li>
+                        <Link to="/profile">
+                            <img src={user.imgUrl} className='profile-icon' />
+                            <span> Profile</span>
+                        </Link>
+
                     </li>
                 </ul>
             </nav>

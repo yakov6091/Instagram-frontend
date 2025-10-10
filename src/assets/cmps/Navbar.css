@@ -5,7 +5,7 @@
     align-items: flex-start;
     background-color: var(--color1);
     border-right: 1px solid var(--color5);
-    width: 245px;
+    width: 270px;
     height: 100vh;
     padding: 20px 16px;
     position: fixed;
@@ -13,8 +13,9 @@
     top: 0;
 }
 
-.navbar-logo {
-    margin-bottom: 30px;
+.navbar-logo>img {
+    height: 30px;
+    margin-bottom: 20px;
 }
 
 .logo-text {
@@ -38,22 +39,35 @@
 .navbar-list a {
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-size: 16px;
+    gap: 10px;
+    font-size: 15px;
+
     text-decoration: none;
-    color: #262626;
+    color: var(--color2);
     font-weight: 500;
-    padding: 8px 12px;
-    border-radius: 10px;
+    margin-top: 23px;
+
+    border-radius: 12px;
     transition: all 0.2s ease;
 }
 
 .navbar-list a:hover {
     background-color: var(--color6);
+    transform: scale(1.02);
+
 }
 
 .navbar-list svg {
     width: 22px;
     height: 22px;
     stroke-width: 1.6;
+}
+
+ul .profile-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0;
+
 }
