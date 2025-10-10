@@ -39,14 +39,15 @@
 .navbar-list a {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 15px;
+    gap: 15px;
+    font-size: 18px;
 
     text-decoration: none;
     color: var(--color2);
     font-weight: 500;
     margin-top: 23px;
 
+    padding: 10px 10px;
     border-radius: 12px;
     transition: all 0.2s ease;
 }

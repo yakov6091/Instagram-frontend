@@ -13,7 +13,6 @@ const tags = [
     'romantic',
     'art',
 ]
-console.log('hi');
 
 // postservice export
 export const postService = {
@@ -80,8 +79,8 @@ function getDefaultSort() {
 
 function getEmptyPost() {
     return {
-        _id: makeId(),              // unique id for the post
-        name: '',                    // post title or text
+        _id: makeId(),               // unique id for the post
+        txt: '',                     // post title or text
         imgUrl: '',                  // image URL
         tags: _getRandomTags(),      // tags array
         createdAt: Date.now(),       // timestamp
@@ -128,7 +127,7 @@ function _createPosts() {
         posts = [
             {
                 _id: 'p101',
-                name: 'The sun is looking fire 🩷',
+                txt: 'The sun is looking fire 🩷',
                 imgUrl: 'https://petapixel.com/assets/uploads/2024/01/The-Star-of-System-Sol-Rectangle-640x800.jpg',
                 by: {
                     _id: 'u101',

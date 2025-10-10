@@ -1,5 +1,7 @@
 import { useState } from "react"
 import { Svgs } from "./Svg"
+import { Link } from "react-router-dom";
+
 export function StoryCard({ story }) {
     const {
         txt,
@@ -67,33 +69,36 @@ export function StoryCard({ story }) {
             </div>
 
             <div className="like-span">
-                <span className="likes-count">{likes} </span>Likes
+                <span className="likes-count">{likes} Likes</span>
             </div>
 
             <div className="story-txt">
-                <span><b>{by.fullname}</b>  {txt}</span>
+                <span><b>{by.fullname}</b> {txt}</span>
             </div>
 
             <div>
-                <div className="comments-container">
-                    {comments && comments.map(comment => (
-                        <div key={comment.id}>
-                            <b>{comment.by.fullname}:</b> {comment.txt}
-                        </div>
-                    ))}
-                </div>
+                {comments.length > 0 && (
+                    <div
+                        className="view-all-comments"
+                        // For now, you can leave onClick empty or later open a modal
+                        onClick={() => { }}
 
-                <form onSubmit={handleAddComment}>
-                    <input
-                        type="text"
-                        placeholder="Add a comment"
-                        className="comment"
-                        value={commentTxt}
-                        onChange={handleCommentChange} />
-                </form>
-
+                    >
+                        <Link to="#">View all {comments.length} comments</Link>
+                    </div>
+                )}
             </div>
 
+            <form onSubmit={handleAddComment}>
+                <input
+                    type="text"
+                    placeholder="Add a comment"
+                    className="comment"
+                    value={commentTxt}
+                    onChange={handleCommentChange} />
+            </form>
+
+            <hr className="comment-separator" />
         </section >
     )
 
