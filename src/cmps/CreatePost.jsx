@@ -24,21 +24,21 @@ export function CreatePost({ onPostCreated }) {
 
         setIsPosting(true)
 
-        // Always use the current user info here
-        const newPost = {
-            imgUrl: imgFile,
-            txt: caption,
-            by: {
-                _id: user._id,
-                fullname: user.username,
-                imgUrl: user.imgUrl,
-            },
-            likedBy: [],
-            comments: [],
-            createdAt: Date.now(),
-        };
-
         try {
+            // Always use the current user info here
+            const newPost = {
+                imgUrl: imgFile,
+                txt: caption,
+                by: {
+                    _id: user._id,
+                    fullname: user.username,
+                    imgUrl: user.imgUrl,
+                },
+                likedBy: [],
+                comments: [],
+                createdAt: Date.now(),
+            };
+
             const savedPost = await postService.save(newPost)
             if (onPostCreated) onPostCreated(savedPost)
 
