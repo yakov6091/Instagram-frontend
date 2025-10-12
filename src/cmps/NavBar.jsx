@@ -1,6 +1,7 @@
 import { Svgs } from './Svg'
 import { Link } from 'react-router-dom'
 import { CreatePost } from '../cmps/CreatePost'
+import { Modal } from './Modal'
 import { useState } from 'react'
 import { user } from '../../data/story'
 
@@ -41,11 +42,13 @@ export function NavBar({ onNewPost }) {
                     </li>
                 </ul>
             </nav>
+
+
             {showCreatePost && (
                 <div className="modal-overlay" onClick={() => setShowCreatePost(false)}>
                     <div
                         className="modal-content"
-                        onClick={e => e.stopPropagation()} // prevent closing when clicking inside
+                        onClick={e => e.stopPropagation()}
                     >
                         <CreatePost
                             onPostCreated={(post) => {
