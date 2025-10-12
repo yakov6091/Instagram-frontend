@@ -1,3 +1,4 @@
+/* THE OVERLAY: Covers the entire screen */
 .modal-overlay {
     display: flex;
     justify-content: center;
@@ -11,4 +12,38 @@
 
     z-index: 1000;
     background-color: rgba(0, 0, 0, 0.6);
+}
+
+/* THE CONTENT WINDOW: The "window in the middle" */
+.modal-content {
+    /* Appearance */
+    background-color: var(--color1);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+
+    /* Size Constraints */
+    min-width: 350px;
+    max-width: 90vw;
+    max-height: 90vh;
+
+    /* Ensure the content is visible and scrollable if it's too big */
+    overflow-y: auto;
+}
+
+/* Style the CreatePost form inside the modal */
+.modal-content .create-post-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+.modal-content .preview-img {
+    max-width: 100%;
+    max-height: 300px;
+    /* Example max height for the preview */
+    object-fit: contain;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
 }
