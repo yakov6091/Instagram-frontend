@@ -1,33 +1,36 @@
 import { postService } from "../../services/postService";
 import { useState } from "react";
 import { user } from '../../data/story';
+import { uploadService } from '../../services/uploadService';
 
 export function CreatePost({ onPostCreated }) {
-    const [imgFile, setImgFile] = useState(null)
+    const [imgUrl, setimgUrl] = useState(null)
     const [caption, setCaption] = useState('')
     const [isPosting, setIsPosting] = useState(false)
+    const [isUploading, setIsUploading] = useState(false)
 
-    function handleImgChange(ev) {
-        const file = ev.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            setImgFile(reader.result)
+    async function handleImgChange(ev) {
+        setIsUploading(true);
+        try {
+            const imgData = await uploadService.uploadImg(ev);
+            setimgUrl(imgData.secure_url); // ✅ Use Cloudinary image URL
+        } catch (err) {
+            console.error("Image upload failed:", err);
+        } finally {
+            setIsUploading(false);
         }
-        reader.readAsDataURL(file)
     }
 
     async function handleAddPost(ev) {
         ev.preventDefault();
-        if (!imgFile) return;
+        if (!imgUrl) return;
 
         setIsPosting(true)
 
         try {
             // Always use the current user info here
             const newPost = {
-                imgUrl: imgFile,
+                imgUrl, // Cloudinary URL
                 txt: caption,
                 by: {
                     _id: user._id,
@@ -42,7 +45,7 @@ export function CreatePost({ onPostCreated }) {
             const savedPost = await postService.save(newPost)
             if (onPostCreated) onPostCreated(savedPost)
 
-            setImgFile(null);
+            setimgUrl(null);
             setCaption('');
         } catch (err) {
             console.error("Failed to save post:", err)
@@ -53,7 +56,8 @@ export function CreatePost({ onPostCreated }) {
     return (
         <form className="create-post-form" onSubmit={handleAddPost}>
             <input type="file" accept="image/*" onChange={handleImgChange} />
-            {imgFile && <img src={imgFile} className="preview-img" alt="Preview" />}
+            {isUploading && <p>Uploading image...</p>}
+            {imgUrl && <img src={imgUrl} className="preview-img" alt="Preview" />}
 
             <input
                 type="text"
@@ -63,6 +67,7 @@ export function CreatePost({ onPostCreated }) {
             />
 
             <button type="submit">Post</button>
+
         </form>
     );
 }
