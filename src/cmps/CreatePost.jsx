@@ -3,8 +3,9 @@ import { useState } from "react";
 import { user } from '../../data/story';
 
 export function CreatePost({ onPostCreated }) {
-    const [imgFile, setImgFile] = useState(null);
-    const [caption, setCaption] = useState('');
+    const [imgFile, setImgFile] = useState(null)
+    const [caption, setCaption] = useState('')
+    const [isPosting, setIsPosting] = useState(false)
 
     function handleImgChange(ev) {
         const file = ev.target.files[0];
@@ -12,14 +13,16 @@ export function CreatePost({ onPostCreated }) {
 
         const reader = new FileReader();
         reader.onloadend = () => {
-            setImgFile(reader.result);
-        };
-        reader.readAsDataURL(file);
+            setImgFile(reader.result)
+        }
+        reader.readAsDataURL(file)
     }
 
     async function handleAddPost(ev) {
         ev.preventDefault();
         if (!imgFile) return;
+
+        setIsPosting(true)
 
         // Always use the current user info here
         const newPost = {
@@ -36,13 +39,14 @@ export function CreatePost({ onPostCreated }) {
         };
 
         try {
-            const savedPost = await postService.save(newPost);
-            if (onPostCreated) onPostCreated(savedPost);
+            const savedPost = await postService.save(newPost)
+            if (onPostCreated) onPostCreated(savedPost)
 
             setImgFile(null);
             setCaption('');
         } catch (err) {
-            console.error("Failed to save post:", err);
+            console.error("Failed to save post:", err)
+            setIsPosting(false)
         }
     }
 
