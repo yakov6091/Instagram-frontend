@@ -1,36 +1,42 @@
 import { postService } from "../../services/postService";
+import { uploadService } from "../../services/uploadService";
 import { useState } from "react";
-import { user } from '../../data/story';
-import { uploadService } from '../../services/uploadService';
+import { user } from "../../data/story";
 
 export function CreatePost({ onPostCreated }) {
-    const [imgUrl, setimgUrl] = useState(null)
-    const [caption, setCaption] = useState('')
-    const [isPosting, setIsPosting] = useState(false)
+    const [imgUrl, setImgUrl] = useState(null)
+    const [caption, setCaption] = useState("")
     const [isUploading, setIsUploading] = useState(false)
+    const [isPosting, setIsPosting] = useState(false)
 
     async function handleImgChange(ev) {
-        setIsUploading(true);
+        const file = ev.target.files[0];
+        if (!file) return;
+
         try {
-            const imgData = await uploadService.uploadImg(ev);
-            setimgUrl(imgData.secure_url); // ✅ Use Cloudinary image URL
+            setIsUploading(true);
+            // Upload image to Cloudinary
+            const res = await uploadService.uploadImg(ev)
+
+            // Get the secure URL from Cloudinary response
+            setImgUrl(res.secure_url)
+
+            setIsUploading(false)
         } catch (err) {
-            console.error("Image upload failed:", err);
-        } finally {
+            console.error("Image upload failed:", err)
             setIsUploading(false);
         }
     }
 
     async function handleAddPost(ev) {
         ev.preventDefault();
-        if (!imgUrl) return;
+        if (!imgUrl) return
 
-        setIsPosting(true)
+        setIsPosting(true);
 
         try {
-            // Always use the current user info here
             const newPost = {
-                imgUrl, // Cloudinary URL
+                imgUrl,
                 txt: caption,
                 by: {
                     _id: user._id,
@@ -45,8 +51,10 @@ export function CreatePost({ onPostCreated }) {
             const savedPost = await postService.save(newPost)
             if (onPostCreated) onPostCreated(savedPost)
 
-            setimgUrl(null);
-            setCaption('');
+
+            setImgUrl(null)
+            setCaption("")
+            setIsPosting(false)
         } catch (err) {
             console.error("Failed to save post:", err)
             setIsPosting(false)
@@ -55,19 +63,37 @@ export function CreatePost({ onPostCreated }) {
 
     return (
         <form className="create-post-form" onSubmit={handleAddPost}>
-            <input type="file" accept="image/*" onChange={handleImgChange} />
-            {isUploading && <p>Uploading image...</p>}
+            {/* Hidden file input */}
+            <input
+                type="file"
+                accept="image/*"
+                onChange={handleImgChange}
+                id="fileInput"
+                style={{ display: "none" }}
+            />
+
+            {/* Custom button to trigger file input */}
+            <button
+                type="button"
+                onClick={() => document.getElementById("fileInput").click()}
+                disabled={isUploading || isPosting}
+            >
+                {isUploading ? "Uploading..." : "Browse Image"}
+            </button>
+
+            {/* Preview image */}
             {imgUrl && <img src={imgUrl} className="preview-img" alt="Preview" />}
 
             <input
                 type="text"
                 placeholder="Write a caption..."
                 value={caption}
-                onChange={e => setCaption(e.target.value)}
+                onChange={(e) => setCaption(e.target.value)}
             />
 
-            <button type="submit">Post</button>
-
+            <button type="submit" disabled={isPosting || isUploading}>
+                {isPosting ? "Posting..." : "Post"}
+            </button>
         </form>
-    );
+    )
 }
