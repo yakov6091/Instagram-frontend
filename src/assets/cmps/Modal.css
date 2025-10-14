@@ -42,15 +42,11 @@
     flex-shrink: 0;
 }
 
-.modal-header .header-title {
+/* .modal-header .header-title {
     font-weight: 600;
     color: var(--color2);
-}
+} */
 
-.modal-header .header-seperate {
-    display: none;
-    /* you don’t need a separate <hr> if you use border-bottom */
-}
 
 /* === MAIN CONTENT: Two Columns === */
 .post-creation-content {

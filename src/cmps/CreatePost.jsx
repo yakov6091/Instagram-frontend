@@ -85,16 +85,14 @@ export function CreatePost({ onPostCreated }) {
                         className="header-back-btn"
                         onClick={() => setImgUrl(null)} // Go back to image selection
                     >
-                        {/* You can replace the text with an arrow icon SVG from Svgs */}
                         Back
                     </button>
                 )}
 
                 <div>
                     <span className="header-title">Create new post</span>
-                    <hr className="header-seperate" />
-                </div>
 
+                </div>
 
                 {/* Right/Share button is only visible when an image is selected */}
                 {imgUrl && (
@@ -106,7 +104,6 @@ export function CreatePost({ onPostCreated }) {
                         Share
                     </button>
                 )}
-
             </div>
 
             {!imgUrl ? (
@@ -126,7 +123,7 @@ export function CreatePost({ onPostCreated }) {
                     </div>
                 </div>
             ) : (
-                // B. Post Creation State (Image Selected - Two Columns)
+                // Post Creation State (Image Selected - Two Columns)
                 <div className="post-creation-content">
                     {/* Left Section: Image Preview */}
                     <div className="post-image-section">
@@ -144,7 +141,6 @@ export function CreatePost({ onPostCreated }) {
                             <span className="username">{user.username}</span>
                         </div>
 
-                        {/* Caption Input (Using textarea for multi-line like Instagram) */}
                         <textarea
                             placeholder="Write a caption..."
                             value={caption}

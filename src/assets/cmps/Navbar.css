@@ -45,7 +45,7 @@
 }
 
 .navbar-list a:hover {
-    background-color: var(--color6);
+    background-color: var(--color5);
     transform: scale(1.02);
 }
 

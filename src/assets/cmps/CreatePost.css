@@ -14,7 +14,7 @@
     /* Ensures child components don't leak out */
 }
 
-.modal-header {
+/* .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -23,7 +23,7 @@
 
     position: relative;
     flex-shrink: 0;
-}
+} */
 
 .modal-header div {
     display: flex;
@@ -55,7 +55,7 @@
     cursor: pointer;
     font-size: 0.95em;
     padding: 0;
-    margin-right: 20px;
+
     transition: color 0.2s ease;
 }
 
