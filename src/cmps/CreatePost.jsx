@@ -2,12 +2,19 @@ import { postService } from "../../services/postService";
 import { uploadService } from "../../services/uploadService";
 import { useState } from "react";
 import { user } from "../../data/story";
+import { Svgs } from "./Svg";
 
 export function CreatePost({ onPostCreated }) {
     const [imgUrl, setImgUrl] = useState(null)
     const [caption, setCaption] = useState("")
     const [isUploading, setIsUploading] = useState(false)
     const [isPosting, setIsPosting] = useState(false)
+
+    function openFileInput() {
+        if (!isUploading && !isPosting) {
+            document.getElementById("fileInput").click();
+        }
+    }
 
     async function handleImgChange(ev) {
         const file = ev.target.files[0];
@@ -46,11 +53,9 @@ export function CreatePost({ onPostCreated }) {
                 likedBy: [],
                 comments: [],
                 createdAt: Date.now(),
-            };
-
+            }
             const savedPost = await postService.save(newPost)
             if (onPostCreated) onPostCreated(savedPost)
-
 
             setImgUrl(null)
             setCaption("")
@@ -72,28 +77,84 @@ export function CreatePost({ onPostCreated }) {
                 style={{ display: "none" }}
             />
 
-            {/* Custom button to trigger file input */}
-            <button
-                type="button"
-                onClick={() => document.getElementById("fileInput").click()}
-                disabled={isUploading || isPosting}
-            >
-                {isUploading ? "Uploading..." : "Browse Image"}
-            </button>
+            <div className="modal-header">
+                {/* Left/Back button is only visible when an image is selected */}
+                {imgUrl && (
+                    <button
+                        type="button"
+                        className="header-back-btn"
+                        onClick={() => setImgUrl(null)} // Go back to image selection
+                    >
+                        {/* You can replace the text with an arrow icon SVG from Svgs */}
+                        Back
+                    </button>
+                )}
 
-            {/* Preview image */}
-            {imgUrl && <img src={imgUrl} className="preview-img" alt="Preview" />}
+                <div>
+                    <span className="header-title">Create new post</span>
+                    <hr className="header-seperate" />
+                </div>
 
-            <input
-                type="text"
-                placeholder="Write a caption..."
-                value={caption}
-                onChange={(e) => setCaption(e.target.value)}
-            />
 
-            <button type="submit" disabled={isPosting || isUploading}>
-                {isPosting ? "Posting..." : "Post"}
-            </button>
+                {/* Right/Share button is only visible when an image is selected */}
+                {imgUrl && (
+                    <button
+                        type="submit"
+                        className="header-action-btn"
+                        disabled={isPosting || isUploading}
+                    >
+                        Share
+                    </button>
+                )}
+
+            </div>
+
+            {!imgUrl ? (
+                // A. Placeholder/Initial State (No Image Selected)
+                <div className="upload-placeholder-wrapper">
+                    <div className="upload-placeholder">
+                        {Svgs.imgIcon}
+                        <p>Drag photos and videos here</p>
+                        <button
+                            type="button"
+                            className="select-button"
+                            onClick={openFileInput}
+                            disabled={isUploading || isPosting}
+                        >
+                            Select from computer
+                        </button>
+                    </div>
+                </div>
+            ) : (
+                // B. Post Creation State (Image Selected - Two Columns)
+                <div className="post-creation-content">
+                    {/* Left Section: Image Preview */}
+                    <div className="post-image-section">
+                        <img src={imgUrl} className="preview-img" alt="Preview" />
+                    </div>
+
+                    {/* Right Section: User Info, Caption, Actions */}
+                    <div className="post-details-section">
+                        {/* User Info */}
+                        <div className="user-info">
+                            <img
+                                src={user.imgUrl}
+                                className="user-profile-img"
+                            />
+                            <span className="username">{user.username}</span>
+                        </div>
+
+                        {/* Caption Input (Using textarea for multi-line like Instagram) */}
+                        <textarea
+                            placeholder="Write a caption..."
+                            value={caption}
+                            onChange={(e) => setCaption(e.target.value)}
+                            className="caption-input"
+                            rows="10"
+                        />
+                    </div>
+                </div>
+            )}
         </form>
     )
 }
