@@ -49,8 +49,8 @@ export function StoryCard({ story }) {
 
             <header className="header-container">
                 <img className="profile-thumb" src={by.imgUrl} />
-                <span className="name">{by.fullname} <span>.</span> </span>
-                <span className="time">Now</span>
+                <span className="name">{by.fullname} </span>
+                <span className="time"><span>•</span>  Now</span>
                 <span className="dots">{Svgs.dots}</span>
             </header>
 
@@ -82,7 +82,6 @@ export function StoryCard({ story }) {
                         className="view-all-comments"
                         // For now, you can leave onClick empty or later open a modal
                         onClick={() => { }}
-
                     >
                         <Link to="#">View all {comments.length} comments</Link>
                     </div>

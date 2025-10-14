@@ -29,7 +29,6 @@
 .name {
     font-weight: 600;
     color: var(--color2);
-    margin-right: 3px;
 }
 
 .name span {
@@ -40,9 +39,13 @@
 
 .time {
     font-size: 12px;
-    color: var(--color2);
+    color: var(--color3);
     font-weight: 400;
     margin-right: auto;
+}
+
+.time span {
+    margin: 2px;
 }
 
 .header-container {
@@ -87,7 +90,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 4px 0px;
+    padding: 4px 0px 0px 0px;
 }
 
 .button-container button {
@@ -117,7 +120,7 @@
 .like-span {
     padding: 0;
     font-size: 14px;
-    margin-bottom: 4px;
+    /* margin-bottom: 4px; */
     color: var(--color2);
     font-weight: 600;
 }
@@ -129,7 +132,7 @@
 
 .likes-count {
     font-weight: 600;
-    /* Highlight the number of likes */
+    margin-bottom: 3px;
 }
 
 /* The div that contains the comments input */
@@ -165,20 +168,18 @@
 .comment-separator {
     border: none;
     height: 1px;
-    background-color: var(--color3);
+    background-color: #dbdbdb;
     margin: 10px 0;
 }
 
 .story-txt {
-    margin: 8px 0 0 0;
     color: var(--color2);
     font-size: 1rem;
-    margin-bottom: 10px;
+    margin-bottom: 4px;
 }
 
 .story-caption {
-    margin-bottom: 8px;
-    color: #262626;
+    color: var(--color2);
     font-size: 1rem;
 }
 
@@ -186,5 +187,5 @@
     color: var(--color3);
     cursor: pointer;
     text-decoration: none;
-
+    margin: 0;
 }
