@@ -1,30 +1,24 @@
 import { useState } from "react"
 import { Svgs } from "./Svg"
-import { Link } from "react-router-dom";
-import { StoryDetails } from "./StoryDetails";
+import { Link, useLocation } from "react-router-dom";
 
 export function StoryCard({ story }) {
     const {
+        _id,
         txt,
         imgUrl,
         by,
         comments: initialComments = [], // Use story.comments if they exist, otherwise start with an empty []
         likedBy = [],
     } = story;
+    const location = useLocation()
+
+    const storyUrl = `/post/${_id}`
 
     const [liked, setLiked] = useState(false)
     const [likes, setLikes] = useState(likedBy.length)
     const [comments, setComments] = useState(initialComments)
     const [commentTxt, setCommentTxt] = useState('')
-    const [isPostOpen, setIsPostOpen] = useState(false)
-
-    function openPostDetails() {
-        setIsPostOpen(true)
-    }
-
-    function closePostDetails() {
-        setIsPostOpen(false)
-    }
 
     function handleLike() {
         if (liked) {
@@ -50,9 +44,7 @@ export function StoryCard({ story }) {
         }
         setComments([...comments, newComment])
         setCommentTxt('')
-
     }
-
 
     return (
         <>
@@ -75,7 +67,12 @@ export function StoryCard({ story }) {
                         onClick={handleLike}>
                         {liked ? Svgs.likeFilled : Svgs.likeOutLine}</button>
 
-                    <button onClick={openPostDetails}>{Svgs.comment}</button>
+                    <Link
+                        to={storyUrl}
+                        state={{ background: location }}>
+                        <button>{Svgs.comment}</button>
+                    </Link>
+
                     <button>{Svgs.save}</button>
                 </div>
 
@@ -89,12 +86,12 @@ export function StoryCard({ story }) {
 
                 <div>
                     {comments.length > 0 && (
-                        <div
-                            className="view-all-comments"
-                            // For now, you can leave onClick empty or later open a modal
-                            onClick={openPostDetails}
-                        >
-                            <Link to="#">View all {comments.length} comments</Link>
+                        <div className="view-all-comments" >
+                            <Link
+                                to={storyUrl}
+                                state={{ background: location }}>
+                                View all {comments.length} comments
+                            </Link>
                         </div>
                     )}
                 </div>
@@ -110,25 +107,6 @@ export function StoryCard({ story }) {
 
                 <hr className="comment-separator" />
             </section >
-
-            {isPostOpen && (
-                <StoryDetails
-                    // Pass the core data and state/handlers
-                    story={story} // Pass the entire story object
-                    currentComments={comments} // Pass the state version of comments
-                    currentLikes={likes} // Pass the state version of likes
-
-                    // Handlers
-                    onAddComment={handleAddComment}
-                    onCommentChange={handleCommentChange}
-                    onClose={closePostDetails}
-                    onLikeToggle={handleLike}
-
-                    // Input State/Status
-                    commentTxt={commentTxt}
-                    isLiked={liked}
-                />
-            )}
         </>
     )
 }

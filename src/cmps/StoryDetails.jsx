@@ -1,21 +1,61 @@
 import { useState, useEffect } from "react"
 import { Svgs } from "./Svg"
 import { user } from '../../data/story'
-export function StoryDetails({
-    story, // Now receiving the whole story object
-    currentComments, // State version of comments
-    currentLikes, // State version of likes
-    onClose,
-    isLiked,
-    onLikeToggle,
-    onAddComment,
-    commentTxt,
-    onCommentChange
-}) {
-    console.log('story:', story)
+import { useParams } from 'react-router-dom'
+export function StoryDetails({ posts, onClose }) {
+    console.log('story:', posts)
+    const { postId } = useParams();
 
-    //Access data directly from the story object
+    const [story, setStory] = useState(null)
+    const [liked, setLiked] = useState(false)
+    const [likes, setLikes] = useState(0)
+    const [comments, setComments] = useState([])
+    const [commentTxt, setCommentTxt] = useState('')
+
+    useEffect(() => {
+        if (posts && posts.length > 0 && postId) {
+            const foundStory = posts.find(post => post._id === postId);
+
+            if (foundStory) {
+                setStory(foundStory);
+                setLikes(foundStory.likedBy.length);
+                setComments(foundStory.comments || []);
+
+            }
+        }
+    }, [posts, postId]);
+
+    if (!story) {
+        return <h1>Loading story...</h1>
+    }
+
     const { imgUrl: imageUrl, by, txt: caption } = story
+
+    function handleLike() {
+        if (liked) {
+            setLiked(false);
+            setLikes(likes - 1);
+        } else {
+            setLiked(true);
+            setLikes(likes + 1);
+        }
+    }
+
+    function handleCommentChange(ev) {
+        setCommentTxt(ev.target.value);
+    }
+
+    function handleAddComment(ev) {
+        ev.preventDefault();
+        if (!commentTxt.trim()) return;
+        const newComment = {
+            id: Date.now().toString(),
+            by: { fullname: 'You' },
+            txt: commentTxt
+        };
+        setComments([...comments, newComment]);
+        setCommentTxt('');
+    }
 
     return (
         <div className="modal-overlay" onClick={onClose}>
@@ -46,7 +86,7 @@ export function StoryDetails({
                         </div>
                     </div>
 
-                    {currentComments?.map((comment, idx) => (
+                    {comments?.map((comment, idx) => (
                         <div className="comment" key={idx}>
                             <span className="username">{comment.by.fullname}</span>
                             {comment.txt}
@@ -58,21 +98,21 @@ export function StoryDetails({
                 <div className="post-details-footer">
                     <div className="button-container">
                         <button
-                            className={isLiked ? "liked" : ""}
-                            onClick={onLikeToggle}>
-                            {isLiked ? Svgs.likeFilled : Svgs.likeOutLine}
+                            className={liked ? "liked" : ""}
+                            onClick={handleLike}>
+                            {liked ? Svgs.likeFilled : Svgs.likeOutLine}
                         </button>
                         <button onClick={onClose}>{Svgs.comment}</button>
                         <button>{Svgs.save}</button>
                     </div>
 
-                    <p className="likes">{currentLikes} likes</p>
-                    <form className="add-comment" onSubmit={onAddComment}>
+                    <p className="likes">{likes} likes</p>
+                    <form className="add-comment" onSubmit={handleAddComment}>
                         <input
                             type="text"
                             placeholder="Add a comment..."
                             value={commentTxt}
-                            onChange={onCommentChange} />
+                            onChange={handleCommentChange} />
                     </form>
                 </div>
             </div>
