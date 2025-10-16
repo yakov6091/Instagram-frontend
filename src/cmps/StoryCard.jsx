@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Svgs } from "./Svg"
 import { Link } from "react-router-dom";
-import { PostDetails } from "./PostDetails";
+import { StoryDetails } from "./StoryDetails";
 
 export function StoryCard({ story }) {
     const {
@@ -112,7 +112,7 @@ export function StoryCard({ story }) {
             </section >
 
             {isPostOpen && (
-                <PostDetails
+                <StoryDetails
                     // Pass the core data and state/handlers
                     story={story} // Pass the entire story object
                     currentComments={comments} // Pass the state version of comments

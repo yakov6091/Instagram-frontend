@@ -1,7 +1,7 @@
 import { HomePage } from "./pages/HomePage"
 import { ProfilePage } from "./pages/ProfilePage"
 import { NavBar } from "./cmps/NavBar"
-import { PostDetails } from "./cmps/PostDetails"
+import { StoryDetails } from "./cmps/StoryDetails"
 import { Route, Routes, useLocation } from 'react-router-dom'
 import { useState } from "react"
 
@@ -26,7 +26,7 @@ export function App() {
 
                 {state && (
                     <Routes>
-                        <Route path="/post/:postId" element={<PostDetails posts={posts} />} />
+                        <Route path="/post/:postId" element={<StoryDetails posts={posts} />} />
                     </Routes>
                 )}
             </main>

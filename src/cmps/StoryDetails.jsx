@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { Svgs } from "./Svg"
 import { user } from '../../data/story'
-export function PostDetails({
+export function StoryDetails({
     story, // Now receiving the whole story object
     currentComments, // State version of comments
     currentLikes, // State version of likes
