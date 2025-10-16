@@ -1,5 +1,3 @@
-// App.jsx
-
 import { HomePage } from "./pages/HomePage"
 import { ProfilePage } from "./pages/ProfilePage"
 import { NavBar } from "./cmps/NavBar"
@@ -16,17 +14,23 @@ export function App() {
     const navigate = useNavigate()
 
     useEffect(() => {
-        // You would typically call your service to get the list of stories
-        postService.query()
-            .then(loadedPosts => {
-                console.log('Stories loaded successfully:', loadedPosts)
-                setPosts(loadedPosts) // This updates the state
-            })
-            .catch(err => {
-                console.error('Error loading stories:', err)
-                // Handle error (e.g., show error message)
-            })
+        const loadPosts = async () => {
+            try {
+                // Await the service function call and store the result
+                const loadedPosts = await postService.query()
+
+                // Update the state with the result
+                setPosts(loadedPosts);
+            } catch (error) {
+                // Catch and log any errors
+                console.error('Error loading stories:', error)
+
+            }
+        }
+        // Call the async function immediately
+        loadPosts()
     }, [])
+
 
     const onClose = () => {
         navigate(-1);
