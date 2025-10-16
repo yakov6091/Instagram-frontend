@@ -4,32 +4,25 @@
     flex-direction: column;
     background-color: var(--color1);
     border-radius: 12px;
-    max-width: 900px;
-    /* Wide modal for two columns */
+
     width: 100%;
-    min-height: 500px;
-    max-height: 80vh;
+    max-width: 700px;
+    /* Wide modal for two columns */
+    min-height: 700px;
+    max-height: 90vh;
     height: 100%;
     overflow: hidden;
     /* Ensures child components don't leak out */
 }
 
-/* .modal-header {
+/* === HEADER === */
+.modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    text-align: center;
-    padding-top: 0.7rem;
-
-    position: relative;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--color3);
     flex-shrink: 0;
-} */
-
-.modal-header div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex-grow: 1;
 }
 
 .modal-header .header-title {
@@ -47,7 +40,8 @@
     margin: 0;
 }
 
-.modal-header .header-action-btn {
+.modal-header .header-action-btn,
+.modal-header .header-back-btn {
     background: none;
     border: none;
     color: var(--second-color3);
@@ -55,19 +49,7 @@
     cursor: pointer;
     font-size: 0.95em;
     padding: 0;
-
     transition: color 0.2s ease;
-}
-
-.modal-header .header-back-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--color2);
-    font-size: 0.95em;
-    padding: 0;
-    margin-right: auto;
-    font-weight: 600;
 }
 
 /*  Upload Placeholder State (A. No Image Selected) */
@@ -88,17 +70,16 @@
     color: var(--color2);
 }
 
-.upload-placeholder .create-post-icon {
-    margin-bottom: 20px;
-    color: var(--color2);
-    /* Ensure your SVG is colored correctly */
-}
-
 .upload-placeholder p {
     font-size: 1.2em;
     margin-bottom: 24px;
     color: var(--color2);
     font-weight: 300;
+}
+
+.upload-placeholder .create-post-icon {
+    margin-bottom: 20px;
+    color: var(--color2);
 }
 
 .upload-placeholder .select-button {
@@ -124,26 +105,25 @@
 /* Left Column: Image */
 .post-image-section {
     flex: 7;
-    /* ~60% */
     display: flex;
     justify-content: center;
     align-items: center;
-
-    overflow: cover;
-    min-height: 100%;
+    overflow: hidden;
+    /* hides overflow so the image doesn't spill */
 }
 
 .post-image-section .preview-img {
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    display: block;
+    /* fills container while keeping proportions */
+    object-position: center;
+    /* centers the image nicely */
 }
 
 /* Right Column: Details & Caption */
 .post-details-section {
-    flex: 2;
-    /* ~40% */
+    flex: 3;
     display: flex;
     flex-direction: column;
     padding: 16px;
@@ -151,37 +131,31 @@
 }
 
 /* User Info Styling */
-.post-details-section .user-info {
+.user-info {
     display: flex;
     align-items: center;
-    padding-bottom: 20px;
-    margin-bottom: 16px;
-    flex-shrink: 0;
+    margin-bottom: 12px;
 }
 
-.post-details-section .user-profile-img {
-    width: 24px;
-    height: 24px;
+.user-profile-img {
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     object-fit: cover;
-    margin: 0 12px 0 0;
+    margin-right: 10px;
 }
 
-.post-details-section .username {
-    font-weight: 600;
-}
-
-/* Caption Input Styling */
-.post-details-section .caption-input {
+/* === CAPTION === */
+.caption-input {
     width: 100%;
+    height: 100%;
     border: none;
-    padding: 0;
-    font-size: 0.95em;
     resize: none;
-    flex-grow: 1;
-    min-height: 100px;
+    background: transparent;
+    color: var(--color2);
+    font-size: 0.95rem;
 }
 
-.post-details-section .caption-input:focus {
+.caption-input:focus {
     outline: none;
 }
