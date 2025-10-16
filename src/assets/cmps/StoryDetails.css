@@ -3,7 +3,7 @@
     grid-template-columns: 1.5fr 1fr;
     grid-template-rows: auto 1fr auto;
 
-    background-color: #fff;
+    background-color: var(--color1);
     border-radius: 8px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     overflow: hidden;
@@ -42,13 +42,14 @@
 
 /* Header (Top Row) */
 .post-details-info {
-    grid-row: 1 / 2;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--color1);
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    grid-row: 1 / 2;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--color5);
 }
 
 
@@ -87,7 +88,7 @@
 /* Footer (Bottom Row) */
 .post-details-footer {
     grid-row: 3 / 4;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--color5);
     padding-top: 10px;
     padding-bottom: 10px;
 }
@@ -99,8 +100,8 @@
 }
 
 .user-info img {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     margin-right: 10px;
     object-fit: cover;
@@ -116,4 +117,9 @@
     padding: 10px 0;
     border: none;
     outline: none;
+}
+
+.post-details-footer .likes {
+    margin-bottom: 0;
+    margin-top: 5px;
 }

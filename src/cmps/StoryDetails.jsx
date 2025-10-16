@@ -66,7 +66,7 @@ export function StoryDetails({
                         <button>{Svgs.save}</button>
                     </div>
 
-                    <p>{currentLikes} likes</p>
+                    <p className="likes">{currentLikes} likes</p>
                     <form className="add-comment" onSubmit={onAddComment}>
                         <input
                             type="text"
