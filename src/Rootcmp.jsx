@@ -1,37 +1,37 @@
 import { HomePage } from "./pages/HomePage"
 import { ProfilePage } from "./pages/ProfilePage"
 import { NavBar } from "./cmps/NavBar"
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
+import { PostDetails } from "./cmps/PostDetails"
+import { Route, Routes, useLocation } from 'react-router-dom'
 import { useState } from "react"
 
 import './assets/main.css'
 
 export function App() {
     const [posts, setPosts] = useState([])
+    const location = useLocation()
+
+    // Save background location if modal is open
+    const state = location.state && location.state.background
 
     return (
         <section className="main-layout">
-            <Router>
-                <NavBar onNewPost={(post) => setPosts([post, ...posts])} />
+            <NavBar onNewPost={(post) => setPosts([post, ...posts])} />
 
-                <main>
+            <main>
+                <Routes location={state || location}>
+                    <Route path="/" element={<HomePage posts={posts} setPosts={setPosts} />} />
+                    <Route path="/:profile_id" element={<ProfilePage posts={posts} setPosts={setPosts} />} />
+                </Routes>
+
+                {state && (
                     <Routes>
-                        <Route element={<HomePage osts={posts} setPosts={setPosts} />}
-                            path="/">
-                        </Route>
-
-                        <Route element={<ProfilePage posts={posts} setPosts={setPosts} />}
-                            path="/:profile_id">
-                        </Route>
+                        <Route path="/post/:postId" element={<PostDetails posts={posts} />} />
                     </Routes>
-                </main>
+                )}
+            </main>
 
-                <footer>
-
-                </footer>
-            </Router>
+            <footer></footer>
         </section>
     )
-
-
 }

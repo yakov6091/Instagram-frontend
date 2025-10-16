@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Svgs } from "./Svg"
 import { Link } from "react-router-dom";
+import { PostDetails } from "./PostDetails";
 
 export function StoryCard({ story }) {
     const {
@@ -15,6 +16,15 @@ export function StoryCard({ story }) {
     const [likes, setLikes] = useState(likedBy.length)
     const [comments, setComments] = useState(initialComments)
     const [commentTxt, setCommentTxt] = useState('')
+    const [isPostOpen, setIsPostOpen] = useState(false)
+
+    function openPostDetails() {
+        setIsPostOpen(true)
+    }
+
+    function closePostDetails() {
+        setIsPostOpen(false)
+    }
 
     function handleLike() {
         if (liked) {
@@ -45,60 +55,86 @@ export function StoryCard({ story }) {
 
 
     return (
-        <section className="story-card-container">
+        <>
+            <section className="story-card-container">
 
-            <header className="header-container">
-                <img className="profile-thumb" src={by.imgUrl} />
-                <span className="name">{by.fullname} </span>
-                <span className="time"><span>•</span>  Now</span>
-                <span className="dots">{Svgs.dots}</span>
-            </header>
+                <header className="header-container">
+                    <img className="profile-thumb" src={by.imgUrl} />
+                    <span className="name">{by.fullname} </span>
+                    <span className="time"><span>•</span>  Now</span>
+                    <span className="dots">{Svgs.dots}</span>
+                </header>
 
-            <div className="img-container">
-                <img src={imgUrl} />
-            </div>
+                <div className="img-container">
+                    <img src={imgUrl} />
+                </div>
 
-            <div className="button-container">
-                <button
-                    className={liked ? "liked" : ""}
-                    onClick={handleLike}>
-                    {liked ? Svgs.likeFilled : Svgs.likeOutLine}</button>
+                <div className="button-container">
+                    <button
+                        className={liked ? "liked" : ""}
+                        onClick={handleLike}>
+                        {liked ? Svgs.likeFilled : Svgs.likeOutLine}</button>
 
-                <button>{Svgs.comment}</button>
-                <button>{Svgs.save}</button>
-            </div>
+                    <button onClick={openPostDetails}>{Svgs.comment}</button>
+                    <button>{Svgs.save}</button>
+                </div>
 
-            <div className="like-span">
-                <span className="likes-count">{likes} Likes</span>
-            </div>
+                <div className="like-span">
+                    <span className="likes-count">{likes} Likes</span>
+                </div>
 
-            <div className="story-txt">
-                <span><b>{by.fullname}</b> {txt}</span>
-            </div>
+                <div className="story-txt">
+                    <span><b>{by.fullname}</b> {txt}</span>
+                </div>
 
-            <div>
-                {comments.length > 0 && (
-                    <div
-                        className="view-all-comments"
-                        // For now, you can leave onClick empty or later open a modal
-                        onClick={() => { }}
-                    >
-                        <Link to="#">View all {comments.length} comments</Link>
-                    </div>
-                )}
-            </div>
+                <div>
+                    {comments.length > 0 && (
+                        <div
+                            className="view-all-comments"
+                            // For now, you can leave onClick empty or later open a modal
+                            onClick={openPostDetails}
+                        >
+                            <Link to="#">View all {comments.length} comments</Link>
+                        </div>
+                    )}
+                </div>
 
-            <form onSubmit={handleAddComment}>
-                <input
-                    type="text"
-                    placeholder="Add a comment"
-                    className="comment"
-                    value={commentTxt}
-                    onChange={handleCommentChange} />
-            </form>
+                <form onSubmit={handleAddComment}>
+                    <input
+                        type="text"
+                        placeholder="Add a comment"
+                        className="comment"
+                        value={commentTxt}
+                        onChange={handleCommentChange} />
+                </form>
 
-            <hr className="comment-separator" />
-        </section >
+                <hr className="comment-separator" />
+            </section >
+
+            {isPostOpen && (
+                <PostDetails
+                    post={{
+                        imageUrl: imgUrl,
+                        username: by.fullname,
+                        userImg: by.imgUrl,
+                        caption: txt,
+                        likes,
+                        comments: comments.map(commnet => ({
+                            user: commnet.by.fullname,
+                            text: commnet.txt
+                        })),
+                    }}
+
+                    onAddComment={handleAddComment}
+                    commentTxt={commentTxt}
+                    onCommentChange={handleCommentChange}
+                    onClose={closePostDetails}
+                    isLiked={liked}
+                    onLikeToggle={handleLike}
+                />
+            )}
+        </>
     )
-
 }
+
+
