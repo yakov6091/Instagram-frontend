@@ -113,24 +113,20 @@ export function StoryCard({ story }) {
 
             {isPostOpen && (
                 <PostDetails
-                    post={{
-                        imageUrl: imgUrl,
-                        username: by.fullname,
-                        userImg: by.imgUrl,
-                        caption: txt,
-                        likes,
-                        comments: comments.map(commnet => ({
-                            user: commnet.by.fullname,
-                            text: commnet.txt
-                        })),
-                    }}
+                    // Pass the core data and state/handlers
+                    story={story} // Pass the entire story object
+                    currentComments={comments} // Pass the state version of comments
+                    currentLikes={likes} // Pass the state version of likes
 
+                    // Handlers
                     onAddComment={handleAddComment}
-                    commentTxt={commentTxt}
                     onCommentChange={handleCommentChange}
                     onClose={closePostDetails}
-                    isLiked={liked}
                     onLikeToggle={handleLike}
+
+                    // Input State/Status
+                    commentTxt={commentTxt}
+                    isLiked={liked}
                 />
             )}
         </>

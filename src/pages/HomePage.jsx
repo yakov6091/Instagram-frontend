@@ -1,8 +1,6 @@
 import { StoryList } from "../cmps/StoryList"
 import { postService } from "../../services/postService"
 import { useState, useEffect } from "react"
-import { CreatePost } from "../cmps/CreatePost"
-import { Modal } from "../cmps/Modal"
 
 export function HomePage() {
     const [stories, setStories] = useState([])
@@ -23,13 +21,10 @@ export function HomePage() {
         loadStories()
     }, [])
 
-    function handlePostCreationSuccess(newPost) {
-        setIsCreateModalOpen(false)
+    // function handlePostCreationSuccess(newPost) {
+    //     setStories(prevStories => [newPost, ...prevStories])
 
-        //To show the new post without a full page refresh
-        setStories(prevStories => [newPost, ...prevStories])
-
-    }
+    // }
 
     return (
         <section className="story-container">
