@@ -6,6 +6,9 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from "react"
 import { postService } from "../services/postService"
 
+import { Provider } from "react-redux"
+import { store } from "./store/store.js"
+
 import './assets/main.css'
 
 export function App() {
@@ -39,31 +42,33 @@ export function App() {
     const background = location.state && location.state.background
 
     return (
-        <section className="main-layout">
-            <NavBar onNewPost={(post) => setPosts([post, ...posts])} />
+        <Provider store={store}>
+            <section className="main-layout">
+                <NavBar onNewPost={(post) => setPosts([post, ...posts])} />
 
-            <main>
-                {/* 1. PRIMARY ROUTES: Match the actual URL */}
-                {/* We use 'background || location' to keep the background location for the modal overlay */}
-                <Routes location={background || location}>
-                    <Route path="/" element={<HomePage posts={posts} setPosts={setPosts} />} />
-                    <Route path="/:profile_id" element={<ProfilePage posts={posts} setPosts={setPosts} />} />
+                <main>
+                    {/* 1. PRIMARY ROUTES: Match the actual URL */}
+                    {/* We use 'background || location' to keep the background location for the modal overlay */}
+                    <Routes location={background || location}>
+                        <Route path="/" element={<HomePage posts={posts} setPosts={setPosts} />} />
+                        <Route path="/:profile_id" element={<ProfilePage posts={posts} setPosts={setPosts} />} />
 
-                    {/* The router must know this path exists. It will load this component 
+                        {/* The router must know this path exists. It will load this component 
                        when you navigate, and it will be covered by the modal logic below. */}
-                    <Route path="/post/:postId" element={<HomePage posts={posts} setPosts={setPosts} />} />
-                </Routes>
-
-                {/* 2. MODAL OVERLAY: Render the PostDetails component if the 'background' state is set */}
-                {/* This conditional block renders the modal *over* the background route */}
-                {background && (
-                    <Routes>
-                        <Route path="/post/:postId" element={<PostDetails posts={posts} onClose={onClose} />} />
+                        <Route path="/post/:postId" element={<HomePage posts={posts} setPosts={setPosts} />} />
                     </Routes>
-                )}
-            </main>
 
-            <footer></footer>
-        </section>
+                    {/* 2. MODAL OVERLAY: Render the PostDetails component if the 'background' state is set */}
+                    {/* This conditional block renders the modal *over* the background route */}
+                    {background && (
+                        <Routes>
+                            <Route path="/post/:postId" element={<PostDetails posts={posts} onClose={onClose} />} />
+                        </Routes>
+                    )}
+                </main>
+
+                <footer></footer>
+            </section>
+        </Provider>
     )
 }
