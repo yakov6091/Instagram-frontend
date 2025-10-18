@@ -29,7 +29,12 @@
     font-weight: 600;
     font-size: 1rem;
     color: var(--color2);
-    margin-bottom: 0.3rem;
+}
+
+.modal-header .title-wrapper {
+    flex-grow: 1;
+    /* Makes the wrapper take all available width */
+    text-align: center;
 }
 
 .modal-header .header-seperate {

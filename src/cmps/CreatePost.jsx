@@ -85,13 +85,12 @@ export function CreatePost({ onPostCreated }) {
                         className="header-back-btn"
                         onClick={() => setImgUrl(null)} // Go back to image selection
                     >
-                        Back
+                        {Svgs.arrowBack}
                     </button>
                 )}
 
-                <div>
+                <div className="title-wrapper">
                     <span className="header-title">Create new post</span>
-
                 </div>
 
                 {/* Right/Share button is only visible when an image is selected */}
