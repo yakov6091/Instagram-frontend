@@ -1,7 +1,7 @@
 import { postService } from "../../services/postService";
 import { uploadService } from "../../services/uploadService";
 import { useState } from "react";
-import { user } from "../../data/story";
+import { user } from "../../data/post";
 import { Svgs } from "./Svg";
 
 export function CreatePost({ onPostCreated }) {

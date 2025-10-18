@@ -2,18 +2,18 @@ import { useState } from "react"
 import { Svgs } from "./Svg"
 import { Link, useLocation } from "react-router-dom";
 
-export function StoryCard({ story }) {
+export function PostCard({ post }) {
     const {
         _id,
         txt,
         imgUrl,
         by,
-        comments: initialComments = [], // Use story.comments if they exist, otherwise start with an empty []
+        comments: initialComments = [], // Use post.comments if they exist, otherwise start with an empty []
         likedBy = [],
-    } = story;
+    } = post;
     const location = useLocation()
 
-    const storyUrl = `/post/${_id}`
+    const postUrl = `/post/${_id}`
 
     const [liked, setLiked] = useState(false)
     const [likes, setLikes] = useState(likedBy.length)
@@ -48,7 +48,7 @@ export function StoryCard({ story }) {
 
     return (
         <>
-            <section className="story-card-container">
+            <section className="post-card-container">
 
                 <header className="header-container">
                     <img className="profile-thumb" src={by.imgUrl} />
@@ -68,7 +68,7 @@ export function StoryCard({ story }) {
                         {liked ? Svgs.likeFilled : Svgs.likeOutLine}</button>
 
                     <Link
-                        to={storyUrl}
+                        to={postUrl}
                         state={{ background: location }}>
                         <button>{Svgs.comment}</button>
                     </Link>
@@ -80,7 +80,7 @@ export function StoryCard({ story }) {
                     <span className="likes-count">{likes} Likes</span>
                 </div>
 
-                <div className="story-txt">
+                <div className="post-txt">
                     <span><b>{by.fullname}</b> {txt}</span>
                 </div>
 
@@ -88,7 +88,7 @@ export function StoryCard({ story }) {
                     {comments.length > 0 && (
                         <div className="view-all-comments" >
                             <Link
-                                to={storyUrl}
+                                to={postUrl}
                                 state={{ background: location }}>
                                 View all {comments.length} comments
                             </Link>

@@ -15,7 +15,7 @@ export function makeLorem(size = 50) {
     const words = [
         'adventure', 'coding', 'photography', 'fun', 'books', 'romantic', 'art',
         'life', 'journey', 'sun', 'moon', 'happy', 'love', 'nature', 'travel',
-        'explore', 'story', 'memory', 'beautiful', 'moment', 'smile', 'friend'
+        'explore', 'post', 'memory', 'beautiful', 'moment', 'smile', 'friend'
     ]
     let txt = ''
     while (size > 0) {

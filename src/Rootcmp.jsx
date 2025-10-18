@@ -1,7 +1,7 @@
 import { HomePage } from "./pages/HomePage"
 import { ProfilePage } from "./pages/ProfilePage"
 import { NavBar } from "./cmps/NavBar"
-import { StoryDetails } from "./cmps/StoryDetails"
+import { PostDetails } from "./cmps/PostDetails"
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from "react"
 import { postService } from "../services/postService"
@@ -54,11 +54,11 @@ export function App() {
                     <Route path="/post/:postId" element={<HomePage posts={posts} setPosts={setPosts} />} />
                 </Routes>
 
-                {/* 2. MODAL OVERLAY: Render the StoryDetails component if the 'background' state is set */}
+                {/* 2. MODAL OVERLAY: Render the PostDetails component if the 'background' state is set */}
                 {/* This conditional block renders the modal *over* the background route */}
                 {background && (
                     <Routes>
-                        <Route path="/post/:postId" element={<StoryDetails posts={posts} onClose={onClose} />} />
+                        <Route path="/post/:postId" element={<PostDetails posts={posts} onClose={onClose} />} />
                     </Routes>
                 )}
             </main>

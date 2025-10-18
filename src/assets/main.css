@@ -7,8 +7,8 @@
 
 /*Cmps*/
 @import './cmps/Navbar.css';
-@import './cmps/StoryCard.css';
+@import './cmps/PostCard.css';
 @import './cmps/Profile.css';
-@import './cmps/CreateStory.css';
+@import './cmps/CreatePost.css';
 @import './cmps/Modal.css';
-@import './cmps/StoryDetails.css'
+@import './cmps/PostDetails.css'

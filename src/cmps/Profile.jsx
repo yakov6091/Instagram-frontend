@@ -1,13 +1,13 @@
 import { use, useState } from "react"
-import { StoryList } from "./StoryList"
+import { PostList } from "./PostList"
 import { Svgs } from "./Svg"
-import { story, user } from '../../data/story.js'
+import { post, user } from '../../data/post.js'
 
 export function Profile() {
     const [galleryPosts, setGalleryPosts] = useState(user.posts)
 
-    // Get the userDetailsdetails from the story object
-    const userDetails = story.by
+    // Get the userDetailsdetails from the post object
+    const userDetails = post.by
 
 
     return (

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { CreatePost } from '../cmps/CreatePost'
 import { Modal } from './Modal'
 import { useState } from 'react'
-import { user } from '../../data/story'
+import { user } from '../../data/post'
 
 
 export function NavBar({ onNewPost }) {

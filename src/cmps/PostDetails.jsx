@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react"
 import { Svgs } from "./Svg"
-import { user } from '../../data/story'
+import { user } from '../../data/post'
 import { useParams } from 'react-router-dom'
-export function StoryDetails({ posts, onClose }) {
-    console.log('story:', posts)
+export function PostDetails({ posts, onClose }) {
+    console.log('post:', posts)
     const { postId } = useParams();
 
-    const [story, setStory] = useState(null)
+    const [post, setPost] = useState(null)
     const [liked, setLiked] = useState(false)
     const [likes, setLikes] = useState(0)
     const [comments, setComments] = useState([])
@@ -14,22 +14,22 @@ export function StoryDetails({ posts, onClose }) {
 
     useEffect(() => {
         if (posts && posts.length > 0 && postId) {
-            const foundStory = posts.find(post => post._id === postId);
+            const foundPost = posts.find(post => post._id === postId);
 
-            if (foundStory) {
-                setStory(foundStory);
-                setLikes(foundStory.likedBy.length);
-                setComments(foundStory.comments || []);
+            if (foundPost) {
+                setPost(foundPost);
+                setLikes(foundPost.likedBy.length);
+                setComments(foundPost.comments || []);
 
             }
         }
     }, [posts, postId]);
 
-    if (!story) {
-        return <h1>Loading story...</h1>
+    if (!post) {
+        return <h1>Loading post...</h1>
     }
 
-    const { imgUrl: imageUrl, by, txt: caption } = story
+    const { imgUrl: imageUrl, by, txt: caption } = post
 
     function handleLike() {
         if (liked) {

@@ -1,4 +1,4 @@
-import { StoryList } from "../cmps/StoryList"
+import { PostList } from "../cmps/PostList"
 import { postService } from "../../services/postService"
 import { useState, useEffect } from "react"
 
@@ -27,9 +27,9 @@ export function HomePage() {
     // }
 
     return (
-        <section className="story-container">
+        <section className="post-container">
             {error && <p>{error}</p>}
-            <StoryList stories={stories} />
+            <PostList stories={stories} />
         </section>
     )
 }

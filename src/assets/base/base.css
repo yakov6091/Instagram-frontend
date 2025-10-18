@@ -48,7 +48,7 @@ button {
 }
 
 .caption,
-.story-caption {
+.post-caption {
     font-size: 1rem;
     color: var(--color2);
 }

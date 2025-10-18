@@ -2,7 +2,7 @@
  1. Header Styling (Name, Time, Follow)
    ------------------------------------
  */
-.story-card-container {
+.post-card-container {
     width: 400px;
     max-width: 400px;
     margin: 0 auto 30px auto;
@@ -11,7 +11,7 @@
     overflow: hidden;
 }
 
-.story-card-container .header-container {
+.post-card-container .header-container {
     display: flex;
     align-items: center;
     padding: 10px 0px;
@@ -163,13 +163,13 @@
     margin: 10px 0;
 }
 
-.story-txt {
+.post-txt {
     color: var(--color2);
     font-size: 1rem;
     margin-bottom: 4px;
 }
 
-.story-caption {
+.post-caption {
     color: var(--color2);
     font-size: 1rem;
 }
