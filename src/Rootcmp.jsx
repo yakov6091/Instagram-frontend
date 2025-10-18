@@ -24,7 +24,6 @@ export function App() {
             } catch (error) {
                 // Catch and log any errors
                 console.error('Error loading stories:', error)
-
             }
         }
         // Call the async function immediately

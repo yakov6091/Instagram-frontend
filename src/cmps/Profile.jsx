@@ -23,9 +23,15 @@ export function Profile() {
                 <div className="profile-details">
                     <h2 className="profile-name">{userDetails.fullname}</h2>
                     <div className="profile-stats">
-                        <span><b>{galleryPosts.length}</b> posts</span>
-                        <span><b>{user.followers.length}</b> followers</span>
-                        <span><b>{user.followers.length}</b> following</span>
+                        <span><b>{galleryPosts.length}</b>
+                            {galleryPosts.length === 1 ? "post" : "posts"}
+                        </span>
+                        <span><b>{user.followers.length}</b>
+                            {user.followers.length === 1 ? "follower" : "followers"}
+                        </span>
+                        <span><b>{user.followers.length}</b>
+                            {user.following.length === 1 ? "following" : "followings"}
+                        </span>
                     </div>
                 </div>
 

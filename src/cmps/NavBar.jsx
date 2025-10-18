@@ -29,7 +29,7 @@ export function NavBar({ onNewPost }) {
                             onClick={() => setShowCreatePost(!showCreatePost)}
                         >
                             {Svgs.add}
-                            <span>New Post</span>
+                            <span>Create</span>
                         </Link>
 
                     </li>

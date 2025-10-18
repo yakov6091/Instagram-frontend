@@ -31,10 +31,9 @@
     color: var(--color2);
 }
 
-.name span {
-    width: 15px;
-    height: 15px;
-    margin-bottom: 20px;
+.name::after {
+    content: '•';
+    margin-left: 3px;
 }
 
 .time {
@@ -42,6 +41,7 @@
     color: var(--color3);
     font-weight: 400;
     margin-right: auto;
+
 }
 
 .time span {
