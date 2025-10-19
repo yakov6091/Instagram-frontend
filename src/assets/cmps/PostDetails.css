@@ -1,99 +1,88 @@
 .post-details-modal {
     display: grid;
+    /* Defines 2 columns: 1.5 parts for image, 1 part for content */
     grid-template-columns: 1.5fr 1fr;
+    /* Defines 3 rows for the right column: Header (auto), Comments (1fr/stretch), Footer (auto) */
     grid-template-rows: auto 1fr auto;
 
     background-color: var(--color1);
+    /* Assumes light background */
     border-radius: 8px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     overflow: hidden;
+    /* Important for border-radius on children */
 
     width: 90%;
     max-width: 900px;
-    /* Wider to accommodate two columns */
     max-height: 90vh;
 }
 
+/* GRID COLUMN 1: IMAGE SECTION */
 .post-details-image {
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: var(--color2);
+    /* Secondary background for image area */
+    /* Image spans all 3 rows in the first column */
     grid-row: 1 / span 3;
-    /* Image spans all 3 rows */
     grid-column: 1 / 2;
 }
 
 .post-details-image img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
-    /* Ensures the whole image is visible */
+    object-fit: cover;
+    /* Ensures the image is visible without cropping */
 }
 
-/* All right-side elements go into the second column */
-.post-details-info,
+/* GRID COLUMN 2: HEADER, COMMENTS, FOOTER */
+.post-details-header,
 .post-details-comments,
 .post-details-footer {
     grid-column: 2 / 3;
+    /* ALWAYS in the second column */
     padding: 0 15px;
-    /* Consistent horizontal padding */
 }
 
-/* Header (Top Row) */
-.post-details-info {
+/* Header (Row 1) */
+.post-details-header {
+    grid-row: 1 / 2;
+    /* Forces it into the first row */
+
     display: flex;
     justify-content: space-between;
+    /* If there were actions/menu on the right */
     align-items: center;
 
-    grid-row: 1 / 2;
     padding-top: 10px;
-    padding-bottom: 5px;
+    padding-bottom: 10px;
     border-bottom: 1px solid var(--color5);
+    /* Divider */
 }
 
-
-/* Comments (Middle Row - Stretches) */
+/* Comments/Caption (Row 2 - Stretches and Scrolls) */
 .post-details-comments {
     grid-row: 2 / 3;
+    /* Forces it into the second row, which is defined as 1fr (flexible) */
     overflow-y: auto;
-    /* Makes the comments area scrollable */
+    /* Allows scrolling for long comment lists */
     padding-top: 15px;
+    padding-bottom: 15px;
+    /* Add bottom padding for content near the footer */
 }
 
-.post-caption-owner-details {
-    display: flex;
-    /* Align image and text horizontally */
-    align-items: flex-start;
-    /* Align to the top */
-    margin-bottom: 15px;
-}
-
-.post-caption-owner-details .profile-thumb {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 12px;
-    /* Optional: Ensure the profile image is always visible */
-    flex-shrink: 0;
-}
-
-.post-caption-owner-details .caption-text-content {
-    /* Allows the text content to wrap */
-    flex-grow: 1;
-}
-
-
-/* Footer (Bottom Row) */
+/* Footer (Row 3 - Fixed Height) */
 .post-details-footer {
     grid-row: 3 / 4;
+    /* Forces it into the third row, which is defined as auto (content height) */
     border-top: 1px solid var(--color5);
+    /* Divider */
     padding-top: 10px;
     padding-bottom: 10px;
 }
 
-/* Additional styling for elements inside */
+/* INNER ELEMENT STYLING */
 .user-info {
     display: flex;
     align-items: center;
@@ -107,9 +96,68 @@
     object-fit: cover;
 }
 
-.comment .username {
+/* Post Owner Caption/Details */
+.post-caption-owner-details {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.post-caption-owner-details .profile-thumb {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 12px;
+    flex-shrink: 0;
+    /* Prevents the thumb from shrinking */
+}
+
+.post-caption-owner-details .caption-text-content {
+    flex-grow: 1;
+    word-wrap: break-word;
+}
+
+.comment {
+    margin-bottom: 8px;
+    /* Spacing between comments */
+    line-height: 1.4;
+}
+
+.comment .username,
+.post-caption-owner-details .username {
     font-weight: bold;
     margin-right: 5px;
+}
+
+/* Footer Actions */
+.button-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.button-container button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px 0;
+    /* You would add specific icon/SVG sizing here */
+}
+
+.post-details-footer .likes {
+    font-weight: bold;
+    margin-bottom: 8px;
+    margin-top: 5px;
+}
+
+/* Add Comment Form */
+.add-comment {
+    border-top: 1px solid var(--color5);
+    margin: 0 -15px;
+    /* Extend border to the edges of the modal */
+    padding: 0 15px;
+    padding-top: 8px;
 }
 
 .add-comment input {
@@ -117,9 +165,6 @@
     padding: 10px 0;
     border: none;
     outline: none;
-}
-
-.post-details-footer .likes {
-    margin-bottom: 0;
-    margin-top: 5px;
+    font-size: 14px;
+    /* Adjust color to match text input style */
 }
