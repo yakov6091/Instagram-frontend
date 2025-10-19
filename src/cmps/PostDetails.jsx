@@ -1,135 +1,124 @@
 import { useState, useEffect } from "react"
 import { Svgs } from "./Svg"
-import { user } from '../../data/post'
 import { useParams } from 'react-router-dom'
-import { useDispatch } from "react-redux"
+import { useSelector } from "react-redux"
 import { togglePostLike, addPostComment } from "../store/actions/post.actions"
 
-export function PostDetails({ posts, onClose }) {
-    const { postId } = useParams();
-    const dispatch = useDispatch()
+export function PostDetails({ onClose }) {
+    const { postId } = useParams()
+    const { user } = useSelector(state => state.userModule)
+    const { posts } = useSelector(state => state.postModule)
 
     const [post, setPost] = useState(null)
     const [commentTxt, setCommentTxt] = useState('')
 
     useEffect(() => {
-        // The post is found in the *global* Redux state passed as a prop (`posts`)
-        if (posts && posts.length > 0 && postId) {
+        if (posts && postId) {
             const foundPost = posts.find(post => post._id === postId)
-
-            if (foundPost) {
-                setPost(foundPost);
-            }
+            if (foundPost) setPost(foundPost)
         }
-        // Dependency array ensures this runs when the post list or the postId changes
-    }, [posts, postId]);
+    }, [posts, postId])
 
     if (!post) {
-        return <h1>Loading post...</h1>
+        return <div className="loading-post-details"><h1>Loading post...</h1></div>
     }
 
-    const { imgUrl: imageUrl, by, txt: caption } = post
+    // This line is now safe because we checked that 'post' is not null
+    const { imgUrl, by, txt: caption, likedBy = [], comments = [] } = post
 
-    const isLiked = post.likedBy.some(like => like._id === user._id);
-    const likeCount = post.likedBy.length;
-    const postComments = post.comments || [];
+    const isLiked = user ? likedBy.some(like => like._id === user._id) : false
+    const likeCount = likedBy.length
 
     function handleCommentChange(ev) {
-        setCommentTxt(ev.target.value);
+        setCommentTxt(ev.target.value)
     }
 
+    // Directly call the async action function
     async function handleLike() {
-        // 1. Optimistic UI update is usually handled inside the action/reducer
-        // 2. Dispatch the action to update the backend and Redux store
-        try {
-            dispatch(togglePostLike(post._id));
-        } catch (err) {
-            console.error("Failed to toggle like:", err);
+        if (!user) return
+
+        const userMiniProfile = {
+            _id: user._id,
+            username: user.username,
+            imgUrl: user.imgUrl
         }
+        // Call the async function directly
+        await togglePostLike(post._id, user._id, userMiniProfile)
     }
 
-    function handleCommentChange(ev) {
-        setCommentTxt(ev.target.value);
-    }
-
+    //  Directly call the async action function
     async function handleAddComment(ev) {
-        ev.preventDefault();
-        if (!commentTxt.trim()) return;
+        ev.preventDefault()
+        if (!commentTxt.trim() || !user) return
 
-        // 1. Prepare data for the action
-        const newCommentTxt = commentTxt.trim()
+        // This is a minimal ID generator for temporary optimistic updates
+        const tempId = 'c' + Date.now() + Math.random().toString(36).substring(2, 5)
 
-        try {
-            // 2. Dispatch the action to save the comment
-            dispatch(addPostComment(post._id, newCommentTxt));
-
-            // 3. Clear local input state after successful dispatch
-            setCommentTxt('');
-        } catch (error) {
-            console.error("Failed to add comment:", error);
+        const newComment = {
+            _id: tempId, // Add a temporary ID for the optimistic update/rollback logic
+            txt: commentTxt.trim(),
+            by: {
+                _id: user._id,
+                username: user.username,
+                imgUrl: user.imgUrl
+            }
         }
+        // NEW: Call the async function directly
+        await addPostComment(post._id, newComment)
+
+        setCommentTxt('')
     }
 
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div className="post-details-modal" onClick={ev => ev.stopPropagation()}>
-                {/* Left side: image*/}
                 <div className="post-details-image">
-                    <img src={imageUrl} />
+                    <img src={imgUrl} alt="Post content" />
                 </div>
 
-                {/* Right side: info*/}
                 <div className="post-details-info">
                     <div className="post-details-header">
                         <div className="user-info">
-                            <img src={user.imgUrl} />
-                            <span className="username">{user.username}</span>
-                        </div>
-
-                    </div>
-                </div>
-
-                {/* Comments */}
-                <div className="post-details-comments">
-                    <div className="post-caption-owner-details comment">
-                        <img className="profile-thumb" src={by.imgUrl} />
-                        <div className="caption-text-content">
+                            <img src={by.imgUrl} />
                             <span className="username">{by.fullname}</span>
-                            {caption}
                         </div>
                     </div>
 
-                    {postComments?.map((comment, idx) => (
-                        <div className="comment" key={idx}>
-                            <span className="username">{comment.by.fullname}</span>
-                            {comment.txt}
+                    <div className="post-details-comments">
+                        <div className="post-caption-owner-details comment">
+                            <img className="profile-thumb" src={by.imgUrl} />
+                            <div className="caption-text-content">
+                                <span className="username">{by.fullname}</span> {caption}
+                            </div>
                         </div>
-                    ))}
-                </div>
 
-                {/* Likes + add comment */}
-                <div className="post-details-footer">
-                    <div className="button-container">
-                        <button
-                            className={isLiked ? "liked" : ""}
-                            onClick={handleLike}>
-                            {isLiked ? Svgs.likeFilled : Svgs.likeOutLine}
-                        </button>
-                        <button onClick={onClose}>{Svgs.comment}</button>
-                        <button>{Svgs.save}</button>
+                        {comments.map(comment => (
+                            <div className="comment" key={comment._id || Math.random()}>
+                                <span className="username">{comment.by.fullname}</span> {comment.txt}
+                            </div>
+                        ))}
                     </div>
 
-                    <p className="likes">{likeCount} likes</p>
-                    <form className="add-comment" onSubmit={handleAddComment}>
-                        <input
-                            type="text"
-                            placeholder="Add a comment..."
-                            value={commentTxt}
-                            onChange={handleCommentChange} />
-                    </form>
+                    <div className="post-details-footer">
+                        <div className="button-container">
+                            <button className={isLiked ? "liked" : ""} onClick={handleLike}>
+                                {isLiked ? Svgs.likeFilled : Svgs.likeOutLine}
+                            </button>
+                            <button onClick={onClose}>{Svgs.comment}</button>
+                            <button>{Svgs.save}</button>
+                        </div>
+
+                        <p className="likes">{likeCount} likes</p>
+                        <form className="add-comment" onSubmit={handleAddComment}>
+                            <input
+                                type="text"
+                                placeholder="Add a comment..."
+                                value={commentTxt}
+                                onChange={handleCommentChange} />
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-
     )
 }

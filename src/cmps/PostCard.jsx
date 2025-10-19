@@ -1,115 +1,143 @@
 import { useState } from "react"
 import { Svgs } from "./Svg"
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom"
+import { useSelector } from "react-redux"
+import { togglePostLike, addPostComment } from "../store/actions/post.actions"
+import { timeAgo } from "../../services/util"
 
 export function PostCard({ post }) {
+    const { user } = useSelector(state => state.userModule)
+
     const {
         _id,
         txt,
         imgUrl,
         by,
-        comments: initialComments = [], // Use post.comments if they exist, otherwise start with an empty []
+        comments = [],
         likedBy = [],
         createdAt
-    } = post;
-    const location = useLocation()
+    } = post
 
+    const location = useLocation()
     const postUrl = `/post/${_id}`
 
-    const [liked, setLiked] = useState(false)
-    const [likes, setLikes] = useState(likedBy.length)
-    const [comments, setComments] = useState(initialComments)
+    // Determine if the current user has liked the post
+    const isLiked = user ? likedBy.some(like => like._id === user._id) : false
+    const likesCount = likedBy.length
+
     const [commentTxt, setCommentTxt] = useState('')
 
-    function handleLike() {
-        if (liked) {
-            setLiked(false)
-            setLikes(likes - 1)
-        } else {
-            setLiked(true)
-            setLikes(likes + 1)
+    // Format timestamp
+    const formattedTime = createdAt ? timeAgo(createdAt) : ''
+
+    // Toggle like action
+    async function handleLike() { // FIX: Made function async
+        if (!user) {
+            console.log("User must be logged in to like a post.")
+            return
         }
+
+        const userMiniProfile = {
+            _id: user._id,
+            username: user.username,
+            imgUrl: user.imgUrl
+        }
+
+        // Call the async action function directly
+        await togglePostLike(_id, user._id, userMiniProfile)
     }
 
+    // Update comment input
     function handleCommentChange(ev) {
         setCommentTxt(ev.target.value)
     }
 
-    function handleAddComment(ev) {
+    // Add comment action
+    async function handleAddComment(ev) {
         ev.preventDefault()
-        if (!commentTxt.trim()) return
+        const comment = commentTxt.trim()
+        if (!comment || !user) return
+
+        // Generate a temporary ID for optimistic update/rollback (crucial)
+        const tempId = 'c' + Date.now() + Math.random().toString(36).substring(2, 5)
+
         const newComment = {
-            id: Date.now().toString(),
-            by: { fullname: 'You' },
-            txt: commentTxt
+            _id: tempId,
+            txt: comment,
+            by: {
+                _id: user._id,
+                username: user.username,
+                imgUrl: user.imgUrl
+            }
         }
-        setComments([...comments, newComment])
+
+        // Call the async action function directly
+        await addPostComment(_id, newComment)
+
         setCommentTxt('')
     }
 
     return (
-        <>
-            <section className="post-card-container">
+        <section className="post-card-container">
 
-                <header className="header-container">
-                    <img className="profile-thumb" src={by.imgUrl} />
-                    <span className="name">{by.fullname} </span>
-                    <span className="time"> {Date.now(createdAt)}</span>
-                    <span className="dots">{Svgs.dots}</span>
-                </header>
+            <header className="header-container">
+                <img
+                    className="profile-thumb"
+                    src={by.imgUrl}
+                    alt={`${by.fullname} profile`}
+                />
+                <span className="name">{by.fullname}</span>
+                <span className="time">{formattedTime}</span>
+                <span className="dots">{Svgs.dots}</span>
+            </header>
 
-                <div className="img-container">
-                    <img src={imgUrl} />
-                </div>
+            <div className="img-container">
+                <img src={imgUrl} alt={`Post by ${by.fullname}`} />
+            </div>
 
-                <div className="button-container">
-                    <button
-                        className={liked ? "liked" : ""}
-                        onClick={handleLike}>
-                        {liked ? Svgs.likeFilled : Svgs.likeOutLine}</button>
+            <div className="button-container">
+                <button
+                    className={isLiked ? "liked" : ""}
+                    onClick={handleLike}
+                >
+                    {isLiked ? Svgs.likeFilled : Svgs.likeOutLine}
+                </button>
 
-                    <Link
-                        to={postUrl}
-                        state={{ background: location }}>
-                        <button>{Svgs.comment}</button>
+                <Link to={postUrl} state={{ background: location }}>
+                    <button>{Svgs.comment}</button>
+                </Link>
+
+                <button>{Svgs.save}</button>
+            </div>
+
+            <div className="like-span">
+                <span className="likes-count">{likesCount} {likesCount === 1 ? "Like" : "Likes"}</span>
+            </div>
+
+            <div className="post-txt">
+                <span><b>{by.fullname}</b> {txt}</span>
+            </div>
+
+            {comments.length > 0 && (
+                <div className="view-all-comments">
+                    <Link to={postUrl} state={{ background: location }}>
+                        View all {comments.length} {comments.length === 1 ? "comment" : "comments"}
                     </Link>
-
-                    <button>{Svgs.save}</button>
                 </div>
+            )}
 
-                <div className="like-span">
-                    <span className="likes-count">{likes} Likes</span>
-                </div>
+            <form onSubmit={handleAddComment} className="add-comment-form">
+                <input
+                    type="text"
+                    placeholder="Add a comment"
+                    className="comment"
+                    value={commentTxt}
+                    onChange={handleCommentChange}
+                    disabled={!user}
+                />
+            </form>
 
-                <div className="post-txt">
-                    <span><b>{by.fullname}</b> {txt}</span>
-                </div>
-
-                <div>
-                    {comments.length > 0 && (
-                        <div className="view-all-comments" >
-                            <Link
-                                to={postUrl}
-                                state={{ background: location }}>
-                                View all {comments.length} comments
-                            </Link>
-                        </div>
-                    )}
-                </div>
-
-                <form onSubmit={handleAddComment}>
-                    <input
-                        type="text"
-                        placeholder="Add a comment"
-                        className="comment"
-                        value={commentTxt}
-                        onChange={handleCommentChange} />
-                </form>
-
-                <hr className="comment-separator" />
-            </section >
-        </>
+            <hr className="comment-separator" />
+        </section>
     )
 }
-
-

@@ -1,19 +1,18 @@
 import { PostList } from "../cmps/PostList"
-import { postService } from "../../services/postService"
-import { useState, useEffect } from "react"
-import { useSelector, useDispatch } from "react-redux"
+import { useEffect } from "react"
+import { useSelector } from "react-redux"
 import { loadPosts } from "../store/actions/post.actions"
 
 export function HomePage() {
-    const dispatch = useDispatch()
-
-    // Read the posts array from the Redux store
+    // Read posts from Redux store
     const posts = useSelector(state => state.postModule.posts || [])
+    const isLoading = useSelector(state => state.postModule.flag.isLoading)
 
     useEffect(() => {
         loadPosts()
-
     }, [])
+
+    if (isLoading) return <div>Loading posts...</div>
 
     return (
         <section className="post-container">

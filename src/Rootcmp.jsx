@@ -3,72 +3,51 @@ import { ProfilePage } from "./pages/ProfilePage"
 import { NavBar } from "./cmps/NavBar"
 import { PostDetails } from "./cmps/PostDetails"
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
-import { useState, useEffect } from "react"
-import { postService } from "../services/postService"
-
-import { Provider } from "react-redux"
-import { store } from "./store/store.js"
+import { useEffect } from "react"
+import { login } from "./store/actions/user.actions"
+import { loadPosts } from "./store/actions/post.actions"
 
 import './assets/main.css'
 
 export function App() {
-    const [posts, setPosts] = useState([])
+
     const location = useLocation()
     const navigate = useNavigate()
 
     useEffect(() => {
-        const loadPosts = async () => {
-            try {
-                // Await the service function call and store the result
-                const loadedPosts = await postService.query()
-
-                // Update the state with the result
-                setPosts(loadedPosts);
-            } catch (error) {
-                // Catch and log any errors
-                console.error('Error loading stories:', error)
-            }
-        }
-        // Call the async function immediately
+        login()
         loadPosts()
     }, [])
 
-
     const onClose = () => {
-        navigate(-1);
+        if (location.state?.background) navigate(-1)
+        else navigate('/')
     }
 
-    // Save background location if modal is open (This logic is correct for modals)
+    // If there’s a background route, it means the modal should open
     const background = location.state && location.state.background
 
     return (
-        <Provider store={store}>
-            <section className="main-layout">
-                <NavBar onNewPost={(post) => setPosts([post, ...posts])} />
+        <section className="main-layout">
+            <NavBar />
+            <main>
+                {/* Primary Routes */}
+                <Routes location={background || location}>
+                    {/* Note: In your routing, the ProfilePage path should probably be /profile/:id */}
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/:profile_id" element={<ProfilePage />} />
+                    {/* This route renders HomePage under /post/:postId, which is fine for modal setup */}
+                    <Route path="/post/:postId" element={<HomePage />} />
+                </Routes>
 
-                <main>
-                    {/* 1. PRIMARY ROUTES: Match the actual URL */}
-                    {/* We use 'background || location' to keep the background location for the modal overlay */}
-                    <Routes location={background || location}>
-                        <Route path="/" element={<HomePage posts={posts} setPosts={setPosts} />} />
-                        <Route path="/:profile_id" element={<ProfilePage posts={posts} setPosts={setPosts} />} />
-
-                        {/* The router must know this path exists. It will load this component 
-                       when you navigate, and it will be covered by the modal logic below. */}
-                        <Route path="/post/:postId" element={<HomePage posts={posts} setPosts={setPosts} />} />
+                {/* Modal Route */}
+                {background && (
+                    <Routes>
+                        {/* The PostDetails component will need the posts data, which is usually passed via props or retrieved with useSelector inside the component */}
+                        <Route path="/post/:postId" element={<PostDetails onClose={onClose} />} />
                     </Routes>
-
-                    {/* 2. MODAL OVERLAY: Render the PostDetails component if the 'background' state is set */}
-                    {/* This conditional block renders the modal *over* the background route */}
-                    {background && (
-                        <Routes>
-                            <Route path="/post/:postId" element={<PostDetails posts={posts} onClose={onClose} />} />
-                        </Routes>
-                    )}
-                </main>
-
-                <footer></footer>
-            </section>
-        </Provider>
+                )}
+            </main>
+        </section>
     )
 }

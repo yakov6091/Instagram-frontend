@@ -1,13 +1,14 @@
 import { Svgs } from './Svg'
 import { Link } from 'react-router-dom'
 import { CreatePost } from '../cmps/CreatePost'
-import { Modal } from './Modal'
 import { useState } from 'react'
-import { user } from '../../data/post'
+import { useSelector } from 'react-redux'
 
-
-export function NavBar({ onNewPost }) {
+export function NavBar() {
+    const { user } = useSelector(state => state.userModule)
     const [showCreatePost, setShowCreatePost] = useState(false)
+
+    const profilePath = user ? `/${user._id}` : '/login'
 
     return (
         <>
@@ -34,7 +35,7 @@ export function NavBar({ onNewPost }) {
 
                     </li>
                     <li>
-                        <Link to="/profile">
+                        <Link to={profilePath}>
                             <img src={user.imgUrl} className='profile-icon' />
                             <span> Profile</span>
                         </Link>
@@ -46,15 +47,9 @@ export function NavBar({ onNewPost }) {
 
             {showCreatePost && (
                 <div className="modal-overlay" onClick={() => setShowCreatePost(false)}>
-                    <div
-                        className="modal-content"
-                        onClick={e => e.stopPropagation()}
-                    >
+                    <div className="modal-content" onClick={e => e.stopPropagation()}>
                         <CreatePost
-                            onPostCreated={(post) => {
-                                if (onNewPost) onNewPost(post)
-                                setShowCreatePost(false) // close modal
-                            }}
+                            onPostCreated={() => setShowCreatePost(false)}
                         />
                     </div>
                 </div>

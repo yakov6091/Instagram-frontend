@@ -25,6 +25,8 @@ export const postService = {
     getDefaultSort,
     getPostTags,
     getPostTagCounts,
+    toggleLike,
+    addComment,
 }
 
 // =====================
@@ -116,6 +118,35 @@ function getPostTagCounts() {
         return tagCounts
     })
 }
+
+// Toggle like for a post by a user
+function toggleLike(postId, userId) {
+    return getById(postId).then(post => {
+        if (!post) return Promise.reject('Post not found')
+
+        const idx = post.likedBy.findIndex(user => user._id === userId)
+        if (idx === -1) {
+            // Add like
+            post.likedBy.push({ _id: userId })
+        } else {
+            // Remove like
+            post.likedBy.splice(idx, 1)
+        }
+
+        return save(post)
+    })
+}
+
+// Add comment to a post
+function addComment(postId, comment) {
+    return getById(postId).then(post => {
+        if (!post) return Promise.reject('Post not found')
+
+        post.comments.push(comment)
+        return save(post)
+    })
+}
+
 
 // =====================
 // Private functions

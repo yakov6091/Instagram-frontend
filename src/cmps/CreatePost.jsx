@@ -1,18 +1,17 @@
 import { postService } from "../../services/postService";
 import { uploadService } from "../../services/uploadService";
 import { useState } from "react";
-import { user } from "../../data/post";
 import { Svgs } from "./Svg";
-import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { savePost } from "../store/actions/post.actions";
 
 export function CreatePost({ onPostCreated }) {
+    const { user } = useSelector(state => state.userModule)
+
     const [imgUrl, setImgUrl] = useState(null)
     const [caption, setCaption] = useState("")
     const [isUploading, setIsUploading] = useState(false)
     const [isPosting, setIsPosting] = useState(false)
-
-    const dispatch = useDispatch()
 
     function openFileInput() {
         if (!isUploading && !isPosting) {
@@ -31,18 +30,18 @@ export function CreatePost({ onPostCreated }) {
 
             // Get the secure URL from Cloudinary response
             setImgUrl(res.secure_url)
-
-            setIsUploading(false)
         } catch (err) {
             console.error("Image upload failed:", err)
-            setIsUploading(false);
             ev.target.value = null
+        } finally {
+            setIsUploading(false)
         }
     }
 
     async function handleAddPost(ev) {
         ev.preventDefault();
-        if (!imgUrl) return
+        // Added user check here to ensure data exists before proceeding
+        if (!imgUrl || !user) return
 
         setIsPosting(true);
 
@@ -51,26 +50,36 @@ export function CreatePost({ onPostCreated }) {
                 imgUrl,
                 txt: caption,
                 by: {
-                    _id: user._id,
-                    fullname: user.username,
-                    imgUrl: user.imgUrl,
+                    // Added safety checks for user properties
+                    _id: user._id || '',
+                    fullname: user.fullname || user.username || 'Anonymous',
+                    username: user.username || 'anonymous',
+                    imgUrl: user.imgUrl || 'https://placehold.co/50x50/333333/ffffff?text=U',
                 },
                 likedBy: [],
                 comments: [],
                 createdAt: Date.now(),
             }
-            const savedPost = await dispatch(savePost(newPost))
 
-            if (onPostCreated) onPostCreated(savedPost)
+            //Call the async action function directly instead of dispatching
+            await savePost(newPost)
 
+            // Cleanup happens only after successful save
             setImgUrl(null)
             setCaption("")
-            setIsPosting(false)
+
+            if (onPostCreated) onPostCreated(newPost);
+
         } catch (err) {
             console.error("Failed to save post:", err)
+        } finally {
+            // Reset posting state regardless of success or failure
             setIsPosting(false)
         }
     }
+
+    // Safety check for user before rendering anything dependent on it
+    if (!user) return <div>Please log in to create a post.</div>;
 
     return (
         <form className="create-post-form" onSubmit={handleAddPost}>
