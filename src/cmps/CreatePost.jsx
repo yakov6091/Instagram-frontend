@@ -3,12 +3,16 @@ import { uploadService } from "../../services/uploadService";
 import { useState } from "react";
 import { user } from "../../data/post";
 import { Svgs } from "./Svg";
+import { useDispatch } from "react-redux";
+import { savePost } from "../store/actions/post.actions";
 
 export function CreatePost({ onPostCreated }) {
     const [imgUrl, setImgUrl] = useState(null)
     const [caption, setCaption] = useState("")
     const [isUploading, setIsUploading] = useState(false)
     const [isPosting, setIsPosting] = useState(false)
+
+    const dispatch = useDispatch()
 
     function openFileInput() {
         if (!isUploading && !isPosting) {
@@ -32,6 +36,7 @@ export function CreatePost({ onPostCreated }) {
         } catch (err) {
             console.error("Image upload failed:", err)
             setIsUploading(false);
+            ev.target.value = null
         }
     }
 
@@ -54,7 +59,8 @@ export function CreatePost({ onPostCreated }) {
                 comments: [],
                 createdAt: Date.now(),
             }
-            const savedPost = await postService.save(newPost)
+            const savedPost = await dispatch(savePost(newPost))
+
             if (onPostCreated) onPostCreated(savedPost)
 
             setImgUrl(null)

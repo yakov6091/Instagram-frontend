@@ -1,5 +1,3 @@
-
-
 export function Modal({ children, isOpen, onClose }) {
     if (!isOpen) return null
 

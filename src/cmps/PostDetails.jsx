@@ -2,27 +2,26 @@ import { useState, useEffect } from "react"
 import { Svgs } from "./Svg"
 import { user } from '../../data/post'
 import { useParams } from 'react-router-dom'
+import { useDispatch } from "react-redux"
+import { togglePostLike, addPostComment } from "../store/actions/post.actions"
+
 export function PostDetails({ posts, onClose }) {
-    console.log('post:', posts)
     const { postId } = useParams();
+    const dispatch = useDispatch()
 
     const [post, setPost] = useState(null)
-    const [liked, setLiked] = useState(false)
-    const [likes, setLikes] = useState(0)
-    const [comments, setComments] = useState([])
     const [commentTxt, setCommentTxt] = useState('')
 
     useEffect(() => {
+        // The post is found in the *global* Redux state passed as a prop (`posts`)
         if (posts && posts.length > 0 && postId) {
-            const foundPost = posts.find(post => post._id === postId);
+            const foundPost = posts.find(post => post._id === postId)
 
             if (foundPost) {
                 setPost(foundPost);
-                setLikes(foundPost.likedBy.length);
-                setComments(foundPost.comments || []);
-
             }
         }
+        // Dependency array ensures this runs when the post list or the postId changes
     }, [posts, postId]);
 
     if (!post) {
@@ -31,13 +30,21 @@ export function PostDetails({ posts, onClose }) {
 
     const { imgUrl: imageUrl, by, txt: caption } = post
 
-    function handleLike() {
-        if (liked) {
-            setLiked(false);
-            setLikes(likes - 1);
-        } else {
-            setLiked(true);
-            setLikes(likes + 1);
+    const isLiked = post.likedBy.some(like => like._id === user._id);
+    const likeCount = post.likedBy.length;
+    const postComments = post.comments || [];
+
+    function handleCommentChange(ev) {
+        setCommentTxt(ev.target.value);
+    }
+
+    async function handleLike() {
+        // 1. Optimistic UI update is usually handled inside the action/reducer
+        // 2. Dispatch the action to update the backend and Redux store
+        try {
+            dispatch(togglePostLike(post._id));
+        } catch (err) {
+            console.error("Failed to toggle like:", err);
         }
     }
 
@@ -45,16 +52,22 @@ export function PostDetails({ posts, onClose }) {
         setCommentTxt(ev.target.value);
     }
 
-    function handleAddComment(ev) {
+    async function handleAddComment(ev) {
         ev.preventDefault();
         if (!commentTxt.trim()) return;
-        const newComment = {
-            id: Date.now().toString(),
-            by: { fullname: 'You' },
-            txt: commentTxt
-        };
-        setComments([...comments, newComment]);
-        setCommentTxt('');
+
+        // 1. Prepare data for the action
+        const newCommentTxt = commentTxt.trim()
+
+        try {
+            // 2. Dispatch the action to save the comment
+            dispatch(addPostComment(post._id, newCommentTxt));
+
+            // 3. Clear local input state after successful dispatch
+            setCommentTxt('');
+        } catch (error) {
+            console.error("Failed to add comment:", error);
+        }
     }
 
     return (
@@ -86,7 +99,7 @@ export function PostDetails({ posts, onClose }) {
                         </div>
                     </div>
 
-                    {comments?.map((comment, idx) => (
+                    {postComments?.map((comment, idx) => (
                         <div className="comment" key={idx}>
                             <span className="username">{comment.by.fullname}</span>
                             {comment.txt}
@@ -98,15 +111,15 @@ export function PostDetails({ posts, onClose }) {
                 <div className="post-details-footer">
                     <div className="button-container">
                         <button
-                            className={liked ? "liked" : ""}
+                            className={isLiked ? "liked" : ""}
                             onClick={handleLike}>
-                            {liked ? Svgs.likeFilled : Svgs.likeOutLine}
+                            {isLiked ? Svgs.likeFilled : Svgs.likeOutLine}
                         </button>
                         <button onClick={onClose}>{Svgs.comment}</button>
                         <button>{Svgs.save}</button>
                     </div>
 
-                    <p className="likes">{likes} likes</p>
+                    <p className="likes">{likeCount} likes</p>
                     <form className="add-comment" onSubmit={handleAddComment}>
                         <input
                             type="text"

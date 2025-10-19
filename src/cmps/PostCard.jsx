@@ -10,6 +10,7 @@ export function PostCard({ post }) {
         by,
         comments: initialComments = [], // Use post.comments if they exist, otherwise start with an empty []
         likedBy = [],
+        createdAt
     } = post;
     const location = useLocation()
 
@@ -53,7 +54,7 @@ export function PostCard({ post }) {
                 <header className="header-container">
                     <img className="profile-thumb" src={by.imgUrl} />
                     <span className="name">{by.fullname} </span>
-                    <span className="time"> Now</span>
+                    <span className="time"> {Date.now(createdAt)}</span>
                     <span className="dots">{Svgs.dots}</span>
                 </header>
 
