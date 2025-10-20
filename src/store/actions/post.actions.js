@@ -5,7 +5,7 @@ import {
     UPDATE_POST,
     SET_POSTS,
     SET_IS_LOADING,
-    TOGGLE_POST_LIKE, // Use the imported constant
+    TOGGLE_POST_LIKE,
     ADD_POST_COMMENT,
 } from '../reducers/post.reducer.js'
 import { store } from '../store'
@@ -98,9 +98,6 @@ export async function togglePostLike(postId, userId, user) { // FIXED: Removed T
 }
 
 
-// --------------------------------------------------
-// Add comment to a post (optimistic update)
-// --------------------------------------------------
 export async function addPostComment(postId, comment) { // FIXED: Made function async
     // Add the comment optimistically
     store.dispatch({ type: ADD_POST_COMMENT, postId, comment })

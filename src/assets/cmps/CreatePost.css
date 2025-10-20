@@ -120,7 +120,7 @@
 .post-image-section .preview-img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     /* fills container while keeping proportions */
     object-position: center;
     /* centers the image nicely */

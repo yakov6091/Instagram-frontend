@@ -3,6 +3,7 @@ import { Svgs } from "./Svg"
 import { Link, useLocation } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { togglePostLike, addPostComment } from "../store/actions/post.actions"
+import { togglePostSave } from "../store/actions/user.actions"
 import { timeAgo } from "../../services/util"
 
 export function PostCard({ post }) {
@@ -25,6 +26,9 @@ export function PostCard({ post }) {
     const isLiked = user ? likedBy.some(like => like._id === user._id) : false
     const likesCount = likedBy.length
 
+    // Determine if the current post is in the user's saved list
+    const isSaved = user && user.savedPostIds ? user.savedPostIds.includes(_id) : false
+
     const [commentTxt, setCommentTxt] = useState('')
 
     // Format timestamp
@@ -45,6 +49,17 @@ export function PostCard({ post }) {
 
         // Call the async action function directly
         await togglePostLike(_id, user._id, userMiniProfile)
+    }
+
+    async function handleSave() {
+        if (!user) {
+            console.log("User must be logged in to save a post.")
+            return
+        }
+
+        // This action should update the user's 'savedPostIds' array in the Redux store
+        // and update the backend to save/unsave the post.
+        await togglePostSave(_id, user._id, isSaved)
     }
 
     // Update comment input
@@ -106,7 +121,12 @@ export function PostCard({ post }) {
                     <button>{Svgs.comment}</button>
                 </Link>
 
-                <button>{Svgs.save}</button>
+                <button
+                    onClick={handleSave}
+                    className={isSaved ? "saved" : ""}
+                >
+                    {isSaved ? Svgs.saved : Svgs.save}
+                </button>
             </div>
 
             <div className="like-span">

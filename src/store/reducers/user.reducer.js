@@ -3,6 +3,7 @@ import { DEMO_USER_DATA } from '../actions/user.actions'
 export const SET_USER = 'SET_USER'
 export const SET_IS_LOADING = 'SET_IS_LOADING'
 export const ADD_POST_TO_USER = 'ADD_POST_TO_USER'
+export const TOGGLE_POST_SAVE = 'TOGGLE_POST_SAVE'
 
 // Initial state
 const initialState = {
@@ -38,6 +39,31 @@ export function userReducer(state = initialState, action = {}) {
                     ...state.user,
                     posts: [action.miniPost, ...(state.user.posts || [])], // prepend safely
                 },
+            }
+        case TOGGLE_POST_SAVE:
+            // Ensure we have a user and a postId to work with
+            if (!state.user || !action.postId) return state
+
+            const postId = action.postId
+            const userSavedIds = state.user.savedPostIds || [] // Get current saved IDs (default to empty array)
+
+            let newSavedPostIds;
+
+            // Check if the post ID is already in the saved list
+            if (userSavedIds.includes(postId)) {
+                // Action: UNSAVE -> Filter it out (remove)
+                newSavedPostIds = userSavedIds.filter(id => id !== postId)
+            } else {
+                // Action: SAVE -> Add it to the list
+                newSavedPostIds = [...userSavedIds, postId]
+            }
+
+            return {
+                ...state,
+                user: {
+                    ...state.user,
+                    savedPostIds: newSavedPostIds // Update the user object with the new list
+                }
             }
 
         default:

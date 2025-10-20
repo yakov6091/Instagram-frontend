@@ -1,8 +1,12 @@
 import { useState } from "react"
 import { Svgs } from "./Svg"
 import { Link } from "react-router-dom"
+import { useSelector } from "react-redux"
 
 export function Profile({ user }) {
+    //  Get the global list of posts from the Redux store
+    const { posts: allPosts } = useSelector(state => state.postModule)
+
     const galleryPosts = user?.posts || []
     const followers = user?.followers || []
     const following = user?.following || []
@@ -17,7 +21,9 @@ export function Profile({ user }) {
         if (activeTab === 'posts') {
             postsToDisplay = galleryPosts
         } else if (activeTab === 'saved') {
-            postsToDisplay = [] // Placeholder for saved posts logic
+            // FILTER GLOBAL POSTS by savedPostIds
+            // .filter checks if the post's _id is in the savedPostIds array
+            postsToDisplay = allPosts.filter(post => savedPostIds.includes(post._id))
         }
 
         // if (postsToDisplay.length === 0) {
@@ -32,7 +38,6 @@ export function Profile({ user }) {
         //         </div>
         //     )
         // }
-
         return (
             <div className="post-grid">
                 {postsToDisplay.map(post => (
@@ -45,7 +50,7 @@ export function Profile({ user }) {
                         className="post-item"
                     >
                         <img
-                            src={post.thumbnailUrl}
+                            src={post.thumbnailUrl || post.imgUrl}
                             className="post-thumbnail"
                         />
                     </Link>

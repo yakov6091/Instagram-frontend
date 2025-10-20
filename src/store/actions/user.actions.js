@@ -2,7 +2,8 @@ import { store } from '../store.js'
 import {
     SET_USER,
     SET_IS_LOADING,
-    ADD_POST_TO_USER
+    ADD_POST_TO_USER,
+    TOGGLE_POST_SAVE,
 } from '../reducers/user.reducer.js'
 
 // --- USER DATA (Simulated API Response) ---
@@ -14,16 +15,16 @@ export const DEMO_USER_DATA = {
     imgUrl: 'https://petapixel.com/assets/uploads/2024/01/The-Star-of-System-Sol-Rectangle-640x800.jpg',
     posts: [
         { _id: 'p101', thumbnailUrl: 'https://petapixel.com/assets/uploads/2024/01/The-Star-of-System-Sol-Rectangle-640x800.jpg', isVideo: false },
-        { _id: 'p102', thumbnailUrl: 'https://petapixel.com/assets/uploads/2021/03/sonya1pickfeat-800x420.jpg', isVideo: false },
     ],
     following: [
         { _id: 'u106', fullname: 'Dob', imgUrl: 'http://some-img' },
+        { _id: 'u107', fullname: 'Joy', imgUrl: 'http://some-img' }
     ],
     followers: [
         { _id: 'u105', fullname: 'Bob', imgUrl: 'http://some-img' },
     ],
     likedPostIds: ['s105', 's122', 's173'],
-    savedPostIds: ['s104', 's111', 's423'],
+    savedPostIds: [],
 }
 
 // --- Dummy login credentials ---
@@ -57,10 +58,9 @@ export async function login(credentials = DUMMY_LOGIN_CREDS) {
     }
 }
 
-// --------------------------------------------------
+
 // Add a post to the user's profile
 // miniPost should be in the format { _id, thumbnailUrl }
-// --------------------------------------------------
 export function addPostToUser(miniPost) {
     if (!miniPost) return
 
@@ -69,3 +69,19 @@ export function addPostToUser(miniPost) {
         miniPost,
     })
 }
+// The isSaved flag should represent the post's CURRENT state BEFORE the toggle.
+export async function togglePostSave(postId) {
+    // We assume the user is already logged in and available in the store state
+    const user = store.getState().userModule.user
+    if (!user) {
+        console.error('togglePostSave failed: User not logged in.')
+        return
+    }
+
+    store.dispatch({
+        type: TOGGLE_POST_SAVE,
+        postId: postId,
+    })
+
+}
+
