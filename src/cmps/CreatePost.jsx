@@ -163,8 +163,7 @@ export function CreatePost({ onPostCreated }) {
                             rows="10"
                         />
                     </div>
-                </div>
-            )}
+                </div>)}
         </form>
     )
 }

@@ -84,15 +84,14 @@ export function PostCard({ post }) {
                 <img
                     className="profile-thumb"
                     src={by.imgUrl}
-                    alt={`${by.fullname} profile`}
                 />
-                <span className="name">{by.fullname}</span>
+                <span className="name">{by.username || by.fullname}</span>
                 <span className="time">{formattedTime}</span>
                 <span className="dots">{Svgs.dots}</span>
             </header>
 
             <div className="img-container">
-                <img src={imgUrl} alt={`Post by ${by.fullname}`} />
+                <img src={imgUrl} />
             </div>
 
             <div className="button-container">
@@ -115,7 +114,7 @@ export function PostCard({ post }) {
             </div>
 
             <div className="post-txt">
-                <span><b>{by.fullname}</b> {txt}</span>
+                <span><b>{by.username}</b> {txt}</span>
             </div>
 
             {comments.length > 0 && (

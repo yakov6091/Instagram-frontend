@@ -2,7 +2,6 @@ import { useState } from "react"
 import { Svgs } from "./Svg"
 import { Link } from "react-router-dom"
 
-
 export function Profile({ user }) {
     const galleryPosts = user?.posts || []
     const followers = user?.followers || []
