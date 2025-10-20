@@ -1,11 +1,12 @@
 /* ------------------------------------
- 1. Header Styling (Name, Time, Follow)
-   ------------------------------------
- */
+ 1. Header Styling (Name, Time, Follow)
+   ------------------------------------
+ */
 .post-card-container {
-    width: 470px;
-    max-height: 585px;
-    max-width: 400px;
+    /* Use a single definitive width, with max-width only if the screen size requires it. 
+       This will be the final post width on large screens. */
+    width: 400px;
+    /* Removed max-width and max-height as they were confusing/unnecessary here */
     margin: 0 auto 30px auto;
     background-color: var(--color1);
     border-radius: 8px;
@@ -48,52 +49,50 @@
     margin: 2px;
 }
 
+/* Consolidated the two .header-container blocks into one */
 .header-container {
     background: none;
     border: none;
     color: var(--second-color1);
-
     font-weight: 600;
     cursor: pointer;
     padding: 0;
-
     outline: none;
     transition: opacity 0.1s;
 }
 
 /* ------------------------------
-    2. Image/Content Styling
-   ------------------------------
+    2. Image/Content Styling
+   ------------------------------
 */
 .img-container {
     width: 100%;
+    /* Let the height be determined by the content (the <img> tag) */
+    height: auto;
     overflow: hidden;
-    position: relative;
-    /* Needed for absolute positioning of the image */
-    padding-top: 100%;
-    /* Creates a height equal to the width (1:1 square) */
+    /* Removed position: relative and padding-top */
 }
 
 .img-container img {
-    /* 👇 MODIFY THESE PROPERTIES */
+    /* 1. Ensure the image fills the post width */
     width: 100%;
-    height: 100%;
-    position: absolute;
-    /* Allows it to cover the entire container */
-    top: 0;
-    left: 0;
 
-    max-height: none;
-    /* No longer needed, as the container controls the height */
-    object-fit: cover;
-    /* Crucial: crops the image to fill the square container */
+    /* 2. CRUCIAL: Let the image's height adjust naturally to keep its aspect ratio */
+    height: auto;
+
+    /* 3. Set a limit on height for very tall images (e.g., 500px) */
+    max-height: 500px;
+
+    /* 4. Ensure the entire image is shown (contain) and remove any absolute positioning */
+    object-fit: contain;
+    position: static;
     display: block;
 }
 
 /* --------------------------------
-     3. Action Buttons Styling
-   --------------------------------
- */
+     3. Action Buttons Styling
+   --------------------------------
+ */
 .button-container {
     display: flex;
     align-items: center;
@@ -122,8 +121,8 @@
 }
 
 /* ---------------------------------
-    4. Likes & Comments Area Styling
-   ------------------------------------
+    4. Likes & Comments Area Styling
+   ------------------------------------
 */
 .like-span {
     padding: 0;
@@ -142,8 +141,6 @@
     font-weight: 600;
     margin-bottom: 3px;
 }
-
-
 
 .comments-container {
     /* This is where existing comments would be rendered */

@@ -114,7 +114,7 @@ export function PostCard({ post }) {
             </div>
 
             <div className="post-txt">
-                <span><b>{by.username}</b> {txt}</span>
+                <span><b>{by.username || by.fullname}</b> {txt}</span>
             </div>
 
             {comments.length > 0 && (
