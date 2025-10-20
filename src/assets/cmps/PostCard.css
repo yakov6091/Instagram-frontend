@@ -3,7 +3,8 @@
    ------------------------------------
  */
 .post-card-container {
-    width: 400px;
+    width: 470px;
+    max-height: 585px;
     max-width: 400px;
     margin: 0 auto 30px auto;
     background-color: var(--color1);
@@ -41,7 +42,6 @@
     color: var(--color3);
     font-weight: 400;
     margin-right: auto;
-
 }
 
 .time span {
@@ -65,20 +65,28 @@
     2. Image/Content Styling
    ------------------------------
 */
-
 .img-container {
     width: 100%;
-    height: 100%;
-
     overflow: hidden;
+    position: relative;
+    /* Needed for absolute positioning of the image */
+    padding-top: 100%;
+    /* Creates a height equal to the width (1:1 square) */
 }
 
 .img-container img {
+    /* 👇 MODIFY THESE PROPERTIES */
     width: 100%;
     height: 100%;
-    max-height: 500px;
-    /* prevents huge images */
+    position: absolute;
+    /* Allows it to cover the entire container */
+    top: 0;
+    left: 0;
+
+    max-height: none;
+    /* No longer needed, as the container controls the height */
     object-fit: cover;
+    /* Crucial: crops the image to fill the square container */
     display: block;
 }
 
