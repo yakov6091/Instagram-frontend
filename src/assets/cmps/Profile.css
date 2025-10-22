@@ -1,20 +1,22 @@
 .profile-container {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    /* padding: 16px 0; */
+    align-items: center;
+    gap: 30px;
+
     background: var(--color1);
     border-radius: 0;
     max-width: 935px;
-    margin: 30px auto;
+
+    padding: 20px;
 }
 
 .profile-header-row {
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     gap: 30px;
-    padding: 0 50px;
+    padding: 0 30px;
 }
 
 .profile-img {
@@ -28,9 +30,6 @@
 
 .profile-details h1,
 .profile-details h2 {
-    display: flex;
-    align-items: center;
-    gap: 20px;
     margin: 0;
 }
 
@@ -39,11 +38,13 @@
     font-weight: 300;
 }
 
+/* stats */
 .profile-stats {
     display: flex;
     gap: 40px;
     font-size: 1rem;
     margin-top: 10px;
+    justify-content: center;
 }
 
 .profile-stats span {
@@ -55,19 +56,20 @@
 .profile-description {
     color: var(--color2);
     font-size: 1rem;
+    max-width: 600px;
 }
 
 /*Gallery section*/
 .profile-gallery {
     width: 100%;
-    margin-top: 44px;
+    margin-top: 40px;
 }
 
 /*  Gallery Tabs */
 .gallery-tabs {
     display: flex;
     justify-content: center;
-    gap: 60px;
+    gap: 40px;
     margin-bottom: 0;
     padding-top: 10px;
     border-bottom: 2px solid var(--color5);
@@ -100,14 +102,14 @@
 
 .post-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(5, 2fr);
     gap: 2px;
     width: 100%;
 }
 
 .post-item {
     width: 100%;
-    aspect-ratio: 1 / 2;
+    aspect-ratio: 1.5 / 2.5;
     /* keeps them square */
     overflow: hidden;
 }

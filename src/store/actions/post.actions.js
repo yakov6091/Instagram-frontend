@@ -43,19 +43,6 @@ export async function removePost(postId) {
 }
 
 // --------------------------------------------------
-// Remove a post optimistically
-// --------------------------------------------------
-export async function removePostOptimistic(postId) {
-    store.dispatch({ type: REMOVE_POST, postId })
-    try {
-        await postService.remove(postId)
-    } catch (err) {
-        console.error('Post action -> Cannot remove post', err)
-        throw err
-    }
-}
-
-// --------------------------------------------------
 // Save (add or update) a post
 // --------------------------------------------------
 export async function savePost(post) {

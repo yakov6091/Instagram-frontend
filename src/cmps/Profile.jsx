@@ -25,19 +25,6 @@ export function Profile({ user }) {
             // .filter checks if the post's _id is in the savedPostIds array
             postsToDisplay = allPosts.filter(post => savedPostIds.includes(post._id))
         }
-
-        // if (postsToDisplay.length === 0) {
-        //     return (
-        //         <div className="gallery-content no-posts-container">
-        //             <p className="no-posts-message">
-        //                 {activeTab === 'posts'
-        //                     ? "No posts yet."
-        //                     : "No saved posts yet. You need a global post list to implement this fully."
-        //                 }
-        //             </p>
-        //         </div>
-        //     )
-        // }
         return (
             <div className="post-grid">
                 {postsToDisplay.map(post => (
