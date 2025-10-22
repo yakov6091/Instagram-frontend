@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { Svgs } from "./Svg"
 import { Link } from "react-router-dom"
 import { useSelector } from "react-redux"
@@ -7,7 +7,10 @@ export function Profile({ user }) {
     //  Get the global list of posts from the Redux store
     const { posts: allPosts } = useSelector(state => state.postModule)
 
-    const galleryPosts = user?.posts || []
+    const galleryPosts = useMemo(() => {
+        return allPosts.filter(post => post.by._id === user._id)
+    }, [allPosts, user._id])
+
     const followers = user?.followers || []
     const following = user?.following || []
     const savedPostIds = user?.savedPostIds || []

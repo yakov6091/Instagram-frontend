@@ -58,8 +58,8 @@ export async function savePost(post) {
             }
             store.dispatch({ type: ADD_POST_TO_USER, miniPost })
         }
-
         return savedPost
+
     } catch (err) {
         console.error('Post action -> Cannot save post', err)
         throw err
