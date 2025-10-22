@@ -1,5 +1,5 @@
 import { Svgs } from './Svg'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { CreatePost } from '../cmps/CreatePost'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -7,8 +7,10 @@ import { useSelector } from 'react-redux'
 export function NavBar() {
     const { user } = useSelector(state => state.userModule)
     const [showCreatePost, setShowCreatePost] = useState(false)
+    const location = useLocation()
 
     const profilePath = user ? `/${user._id}` : '/login'
+    const isHome = location.pathname === '/'
 
     return (
         <>
@@ -20,7 +22,7 @@ export function NavBar() {
                 <ul className="navbar-list">
                     <li>
                         <Link to="/">
-                            {Svgs.home}
+                            {isHome ? Svgs.homeFilled : Svgs.home}
                             <span>Home</span>
                         </Link>
                     </li>

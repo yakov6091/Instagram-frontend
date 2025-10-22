@@ -7,19 +7,31 @@
     height: 100vh;
     border-right: 1px solid var(--color1);
     background-color: var(--color1);
+    z-index: 10;
 }
 
 /* Main content area shifts right to make space for sidebar */
 .main-layout {
     display: flex;
     justify-content: center;
-    margin-left: 150px;
     min-height: 100vh;
-
 }
 
-/* Optional: center your main feed content */
-/* .main-layout>* {
-    width: 500px;
-    max-width: 90vw;
-} */
+/* Center feed section */
+.feed-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    margin-left: 270px;
+    margin-right: 300px;
+    padding: 22px;
+}
+
+/* Right side section */
+.users-section {
+    width: 300px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    background-color: var(--clr-bg);
+}

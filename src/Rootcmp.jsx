@@ -30,7 +30,8 @@ export function App() {
     return (
         <section className="main-layout">
             <NavBar />
-            <main>
+
+            <main className="feed-section">
                 {/* Primary Routes */}
                 <Routes location={background || location}>
                     {/* Note: In your routing, the ProfilePage path should probably be /profile/:id */}
@@ -48,6 +49,10 @@ export function App() {
                     </Routes>
                 )}
             </main>
+
+            <aside className="users-section">
+
+            </aside>
         </section>
     )
 }
