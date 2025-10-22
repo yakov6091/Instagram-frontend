@@ -1,0 +1,116 @@
+/*Users preview */
+.users-preview-container {
+    padding: 10px 0;
+    max-width: 290px;
+}
+
+/* Logged-in User Row */
+.logged-user-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 12px;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.user-username {
+    font-size: 600;
+    font-size: 1rem;
+}
+
+.user-fullname {
+    color: var(--color3);
+    font-size: 0.8rem;
+}
+
+.switch-btn {
+    color: var(--second-color3);
+    font-size: 600;
+    font-size: 0.75rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+/* Suggestions Header */
+.suggestions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.suggestions-header p {
+    color: var(--color3);
+    font-weight: 600;
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+.see-all-btn {
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: var(--color2);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* List of Users */
+.users-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.user-prev-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.user-avatar-sm {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+
+.suggestion-username {
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.suggestion-follow-text {
+    color: #9ca3af;
+    font-size: 0.75rem;
+    margin: 0;
+}
+
+.follow-btn {
+    color: var(--color1);
+    font-weight: 600;
+    font-size: 0.75rem;
+    background: var(--second-color3);
+    border-radius: 10px;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    flex-shrink: 0;
+}

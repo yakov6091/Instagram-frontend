@@ -6,8 +6,9 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { useEffect } from "react"
 import { login } from "./store/actions/user.actions"
 import { loadPosts } from "./store/actions/post.actions"
-
+import { UsersPreview } from "./cmps/usersPreview"
 import './assets/main.css'
+
 
 export function App() {
 
@@ -35,7 +36,7 @@ export function App() {
                 {/* Primary Routes */}
                 <Routes location={background || location}>
                     {/* Note: In your routing, the ProfilePage path should probably be /profile/:id */}
-                    <Route path="/" element={<HomePage />} />
+                    <Route path="/" element={<div className="feed-content-wrapper"><HomePage /></div>} />
 
                     <Route path="/:profile_id" element={
                         <div className="profile-layout">
@@ -55,9 +56,7 @@ export function App() {
                 )}
             </main>
 
-            <aside className="users-section">
 
-            </aside>
         </section>
     )
 }

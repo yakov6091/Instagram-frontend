@@ -20,19 +20,27 @@
 
 /* Center feed section */
 .feed-section {
-    flex: 1;
     display: flex;
     justify-content: center;
-    margin-left: 270px;
-    margin-right: 300px;
-    padding: 22px;
+    align-items: flex-start;
+    flex-grow: 1;
+    padding: 20px 40px;
+}
+
+.feed-content-wrapper {
+    max-width: 630px;
+    width: 100%;
+    margin: 0 auto;
 }
 
 /* Right side section */
-.users-section {
+.users-sections {
     width: 300px;
-    position: sticky;
+    position: absolute;
     top: 0;
+    right: 20px;
+    margin-right: 250px;
+
     height: 100vh;
-    background-color: var(--clr-bg);
+    padding: 20px 20px;
 }
