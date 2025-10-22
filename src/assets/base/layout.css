@@ -1,6 +1,7 @@
 /* Sidebar stays fixed */
 .navbar-container {
-    position: fixed;
+    position: sticky;
+    flex-shrink: 0;
     top: 0;
     left: 0;
     width: 250px;
@@ -10,11 +11,11 @@
     z-index: 10;
 }
 
-/* Main content area shifts right to make space for sidebar */
-.main-layout {
+/* profile section */
+.main-layout .profile-layout {
     display: flex;
     justify-content: center;
-    min-height: 100vh;
+    justify-items: center
 }
 
 /* Center feed section */
