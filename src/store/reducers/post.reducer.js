@@ -6,6 +6,8 @@ export const REMOVE_POST = 'REMOVE_POST'
 export const TOGGLE_POST_LIKE = 'TOGGLE_POST_LIKE'
 export const ADD_POST_COMMENT = 'ADD_POST_COMMENT'
 export const REMOVE_POST_COMMENT = 'REMOVE_POST_COMMENT'
+export const TOGGLE_COMMENT_LIKE = 'TOGGLE_COMMENT_LIKE'
+
 export const SET_IS_LOADING = 'SET_IS_LOADING'
 export const SET_ERROR = 'SET_ERROR'
 export const ADD_POST_TO_USER = 'ADD_POST_TO_USER'
@@ -82,6 +84,30 @@ export function postReducer(state = initialState, action = {}) {
                 }
             })
             return { ...state, posts }
+
+        case TOGGLE_COMMENT_LIKE:
+            const userToToggleCommentLike = action.user
+            posts = state.posts.map(post => {
+                const updatedComments = (post.comments || []).map(comment => {
+                    // Find the correct Comment within the Post
+                    if (comment._id !== action.commentId) return comment
+                    // Toggle the Like status on the Comment
+                    const likedByUser = comment.likedBy?.some(user => user._id === userToToggleCommentLike._id)
+                    return {
+                        ...comment,
+                        likedBy: likedByUser
+                            ? (comment.likedBy || []).filter(u => u._id !== userToToggleCommentLike._id)
+                            : [...(comment.likedBy || []), userToToggleCommentLike],
+                    }
+                })
+                // Return the updated Post with the modified comments array
+                return {
+                    ...post,
+                    comments: updatedComments,
+                }
+            })
+            return { ...state, posts }
+
 
         // FLAGS
         case SET_IS_LOADING:

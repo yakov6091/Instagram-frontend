@@ -7,6 +7,7 @@ import {
     SET_IS_LOADING,
     TOGGLE_POST_LIKE,
     ADD_POST_COMMENT,
+    TOGGLE_COMMENT_LIKE
 } from '../reducers/post.reducer.js'
 import { store } from '../store'
 import { ADD_POST_TO_USER } from '../reducers/user.reducer.js'
@@ -101,6 +102,19 @@ export async function addPostComment(postId, comment) { // FIXED: Made function 
             postId,
             commentId: comment._id, // assuming comment has an _id or temp ID
         })
+        throw err
+    }
+}
+
+export async function toggleCommentLike(postId, commentId, userId, user) {
+    // Optimistic dispatch: Update the UI immediately
+    store.dispatch({ type: TOGGLE_COMMENT_LIKE, postId, commentId, user })
+
+    try {
+        await postService.toggleCommentLike(postId, commentId, userId)
+    } catch (err) {
+        console.error('Post action -> Cannot toggle comment like on service', err)
+
         throw err
     }
 }

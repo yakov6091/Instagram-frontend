@@ -21,8 +21,6 @@ export function ProfilePage() {
     }
 
     return (
-        <section className="profile-container">
-            <Profile user={user} />
-        </section>
+        <Profile user={user} />
     )
 }

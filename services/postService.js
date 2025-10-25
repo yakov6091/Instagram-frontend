@@ -27,6 +27,7 @@ export const postService = {
     getPostTagCounts,
     toggleLike,
     addComment,
+    toggleCommentLike
 }
 
 // =====================
@@ -146,12 +147,38 @@ function addComment(postId, comment) {
         return save(post)
     })
 }
+function toggleCommentLike(postId, commentId, userId) {
+    return getById(postId).then(post => {
+        if (!post) return Promise.reject('Post not found')
+
+        // Find the comment
+        const comment = post.comments.find(comment => comment._id === commentId || c.id === commentId)
+
+        if (!comment) return Promise.reject('Comment not found')
+
+        //  Initialize likedBy if it doesn't exist (important for old data)
+        if (!comment.likedBy) comment.likedBy = []
+
+        // Check if user already liked the comment
+        const likedBy = comment.likedBy
+        const userIdx = likedBy.findIndex(user => user._id === userId)
+
+        if (userIdx === -1) {
+            // Add like: we only need the user ID here for service layer
+            likedBy.push({ _id: userId })
+        } else {
+            // Remove like
+            likedBy.splice(userIdx, 1)
+        }
+
+        // Save the updated post (which contains the updated comment)
+        return save(post)
+    })
+}
 
 
-// =====================
+
 // Private functions
-// =====================
-
 function _createPosts() {
     let posts = loadFromStorage(POST_KEY)
     if (!posts || !posts.length) {

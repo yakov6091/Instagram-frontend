@@ -41,6 +41,7 @@ export function App() {
                     <Route path="/:profile_id" element={
                         <div className="profile-layout">
                             <ProfilePage />
+                            {/* <ProfilePage /> */}
                         </div>} />
 
                     {/* This route renders HomePage under /post/:postId, which is fine for modal setup */}

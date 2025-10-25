@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { Svgs } from "./Svg"
 import { useParams } from 'react-router-dom'
 import { useSelector } from "react-redux"
-import { togglePostLike, addPostComment } from "../store/actions/post.actions"
+import { togglePostLike, addPostComment, toggleCommentLike } from "../store/actions/post.actions"
 
 export function PostDetails({ onClose }) {
     const { postId } = useParams()
@@ -57,6 +57,7 @@ export function PostDetails({ onClose }) {
         const newComment = {
             _id: tempId, // Add a temporary ID for the optimistic update/rollback logic
             txt: commentTxt.trim(),
+            likedBy: [],
             by: {
                 _id: user._id,
                 fullname: user.fullname || user.username,
@@ -74,13 +75,52 @@ export function PostDetails({ onClose }) {
         const isCurrentUserComment = user && comment.by._id === user._id
         const displayName = isCurrentUserComment ? 'You' : comment.by.fullname;
 
+        const commentLikedBy = comment.likedBy || []
+        const isCommentLiked = user ? commentLikedBy.some(like => like._id === user._id) : false
+        const commentLikeCount = commentLikedBy.length
+
+        const likeCountText =
+            commentLikeCount > 0
+                ? `${commentLikeCount} ${commentLikeCount === 1 ? 'like' : 'likes'}`
+                : '';
+
         return (
             // Using comment._id is best, falling back to Math.random() if not available
             <div className="comment" key={comment._id || Math.random()}>
-                <span className="username">{displayName}</span>
-                {comment.txt}
+                {/* Main comment content wrapper */}
+                <div className="comment-main-content">
+                    <span className="username">{displayName}</span>
+                    {comment.txt}
+
+                    {/* Like Count */}
+                    {likeCountText && <p className="comment-likes-count-text">{likeCountText}</p>}
+                </div>
+
+                {/* Comment interaction area (Like button and count) */}
+                <div className="comment-interaction">
+                    {/* Like Button */}
+                    <button
+                        className={`comment-like-btn ${isCommentLiked ? "liked" : ""}`}
+                        // Use a smaller icon for the comment like button
+                        onClick={() => handleCommentLike(comment._id)}>
+                        {isCommentLiked ? Svgs.likeFilledSmall : Svgs.likeOutLineSmall}
+                    </button>
+                </div>
             </div>
         )
+    }
+
+    const handleCommentLike = async (commentId) => {
+        if (!user) return
+
+        const userMiniProfile = {
+            _id: user._id,
+            username: user.username,
+            imgUrl: user.imgUrl
+        }
+
+        // Call the new action function
+        await toggleCommentLike(post._id, commentId, user._id, userMiniProfile)
     }
 
     return (

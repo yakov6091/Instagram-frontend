@@ -119,10 +119,64 @@
 }
 
 .comment {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
     margin-bottom: 8px;
-    /* Spacing between comments */
     line-height: 1.4;
+    font-size: 0.9rem;
 }
+
+.comment-main-content {
+    flex-grow: 1;
+    /* Ensures the text wraps if it's too long */
+    word-break: break-word;
+}
+
+.comment-interaction {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    margin-left: 10px;
+}
+
+.comment-likes-count {
+    /* Style for the numerical count */
+    font-size: 0.7rem;
+    color: var(--color3);
+    margin: 0;
+    min-width: 8px;
+    /* Ensure tiny space for single digit */
+    text-align: right;
+}
+
+.comment-like-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+    color: var(--color3);
+
+    /* Ensure the button is small and looks like an icon */
+    width: 14px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.comment-like-btn.liked {
+    color: #ed4956 !important;
+}
+
+p.comment-likes-count-text {
+    margin: 0;
+    padding: 0;
+    color: var(--color3);
+}
+
 
 .comment .username,
 .post-caption-owner-details .username {
