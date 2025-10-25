@@ -5,6 +5,7 @@ import { useSelector } from "react-redux"
 import { togglePostLike, addPostComment } from "../store/actions/post.actions"
 import { togglePostSave } from "../store/actions/user.actions"
 import { timeAgo } from "../../services/util"
+import EmojiPicker from "emoji-picker-react"
 
 export function PostCard({ post }) {
     const { user } = useSelector(state => state.userModule)
@@ -29,10 +30,22 @@ export function PostCard({ post }) {
     // Determine if the current post is in the user's saved list
     const isSaved = user && user.savedPostIds ? user.savedPostIds.includes(_id) : false
 
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false)
     const [commentTxt, setCommentTxt] = useState('')
 
     // Format timestamp
     const formattedTime = createdAt ? timeAgo(createdAt) : ''
+
+    // Handle emoji
+    function handleEmojiClick(emojiData) {
+        setCommentTxt(prev => prev + emojiData.emoji)
+        setShowEmojiPicker(false) // Close picker after selecting
+    }
+
+    function toggleEmojiPicker(ev) {
+        ev.preventDefault()
+        setShowEmojiPicker(prev => !prev)
+    }
 
     // Toggle like action
     async function handleLike() { // FIX: Made function async
@@ -154,6 +167,19 @@ export function PostCard({ post }) {
                     onChange={handleCommentChange}
                     disabled={!user}
                 />
+                <button
+                    type="button"
+                    className="emoji-picker"
+                    onClick={toggleEmojiPicker}
+                >
+                    {Svgs.emoji}
+                </button>
+
+                {showEmojiPicker && (
+                    <div className="emoji-picker-container">
+                        <EmojiPicker onEmojiClick={handleEmojiClick} />
+                    </div>
+                )}
             </form>
 
             <hr className="comment-separator" />
