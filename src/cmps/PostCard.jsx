@@ -39,7 +39,7 @@ export function PostCard({ post }) {
     // Handle emoji
     function handleEmojiClick(emojiData) {
         setCommentTxt(prev => prev + emojiData.emoji)
-        setShowEmojiPicker(false) // Close picker after selecting
+        setShowEmojiPicker(true) // Stay open after selecting
     }
 
     function toggleEmojiPicker(ev) {

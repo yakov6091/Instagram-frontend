@@ -101,22 +101,19 @@ export function postReducer(state = initialState, action = {}) {
                     }
                 })
                 // Return the updated Post with the modified comments array
-                return {
-                    ...post,
-                    comments: updatedComments,
-                }
+                return { ...post, comments: updatedComments }
             })
-            return { ...state, posts }
+            return { ...state, posts } // RETURN the new state with the updated posts array
 
-
-        // FLAGS
         case SET_IS_LOADING:
             return { ...state, flag: { ...state.flag, isLoading: action.isLoading } }
 
         case SET_ERROR:
             return { ...state, flag: { ...state.flag, error: action.error } }
 
+        // --- DEFAULT ---
         default:
             return state
+
     }
 }

@@ -4,7 +4,11 @@ import {
     SET_IS_LOADING,
     ADD_POST_TO_USER,
     TOGGLE_POST_SAVE,
+    SET_SUGGESTED_USERS,
+    TOGGLE_FOLLOW,
 } from '../reducers/user.reducer.js'
+
+import { userService } from '../../../services/user.service.js'
 
 // --- USER DATA (Simulated API Response) ---
 export const DEMO_USER_DATA = {
@@ -58,6 +62,55 @@ export async function login(credentials = DUMMY_LOGIN_CREDS) {
     }
 }
 
+// Load Suggested Users Action
+export function loadSuggestedUsers() {
+    store.dispatch({ type: SET_IS_LOADING, isLoading: true })
+
+    try {
+        const suggestedUsers = userService.generateMockUsers()
+
+        store.dispatch({
+            type: SET_SUGGESTED_USERS,
+            suggestedUsers,
+        });
+
+    } catch (err) {
+        console.error('User action -> Cannot load suggested users', err);
+    } finally {
+        store.dispatch({ type: SET_IS_LOADING, isLoading: false })
+    }
+}
+
+
+// Toggle Follow/Unfollow Action
+
+export async function toggleFollow(suggestedUserId) {
+    const user = store.getState().userModule.user
+    if (!user) {
+        console.error('toggleFollow failed: User not logged in.')
+        return
+    }
+    try {
+        // Dispatch action to immediately change state
+        store.dispatch({
+            type: TOGGLE_FOLLOW,
+            suggestedUserId
+        })
+
+        // Simulate API call for persistence (e.g., Firebase Firestore update)
+        // In a real app, you would: await userService.updateFollowStatus(user._id, suggestedUserId);
+
+        console.log(`[LOG] Follow status toggled for user ID: ${suggestedUserId}`);
+
+    } catch (err) {
+        // Rollback (Dispatch the action again to revert the state change)
+        store.dispatch({
+            type: TOGGLE_FOLLOW,
+            suggestedUserId
+        })
+        console.error(`User action -> Failed to toggle follow status for ${suggestedUserId}`, err)
+    }
+}
 
 // Add a post to the user's profile
 // miniPost should be in the format { _id, thumbnailUrl }

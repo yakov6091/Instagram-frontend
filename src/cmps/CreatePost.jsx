@@ -1,4 +1,3 @@
-import { postService } from "../../services/postService";
 import { uploadService } from "../../services/uploadService";
 import { useState } from "react";
 import { Svgs } from "./Svg";

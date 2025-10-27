@@ -86,3 +86,47 @@ export function timeAgo(timestamp) {
     }
     return Math.floor(seconds) + "s"
 }
+
+// 5. DETAILED USER GENERATION FUNCTION
+export const generatekUsers = (count = 10) => {
+    const detailedUsers = [];
+    const usedUsernames = new Set();
+
+    for (let i = 0; i < count; i++) {
+        const randomName = getRandomName(names);
+        let username = `${randomName.toLowerCase()}${getRandomInt(10, 99)}`;
+        while (usedUsernames.has(username) || username === MOCK_CURRENT_USER.username) {
+            username = `${randomName.toLowerCase()}${getRandomInt(10, 99)}`;
+        }
+        usedUsernames.add(username);
+
+        const userId = `r${i + 1}${getRandomId()}`;
+        const followerCount = getRandomInt(5, 10);
+        const followingCount = getRandomInt(2, 5);
+        const postCount = getRandomInt(3, 5);
+
+        const user = {
+            _id: userId,
+            username: username,
+            // Mock password/bio are omitted as they are not needed for UI
+            fullname: `${randomName} ${getRandomName(['Rider', 'Hiker', 'Chef', 'Dev', 'Mare', 'joe'])}`,
+            imgUrl: `https://placehold.co/60x60/${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}/FFFFFF?text=${randomName[0]}`,
+
+            posts: Array.from({ length: postCount }, (_, pIndex) => ({
+                _id: `p${getRandomId()}${pIndex}`,
+                thumbnailUrl: `https://placehold.co/300x300/FCA5A5/FFFFFF?text=Post${pIndex + 1}`,
+                isVideo: Math.random() < 0.2, // 20% chance of being a video
+            })),
+
+            following: Array.from({ length: followingCount }, (_, fIndex) => createMiniProfile('uF', fIndex)),
+
+            followers: Array.from({ length: followerCount }, (_, fIndex) => createMiniProfile('uR', fIndex)),
+
+            likedPostIds: Array.from({ length: getRandomInt(3, 5) }, () => `s${getRandomId()}`),
+            savedPostIds: Array.from({ length: getRandomInt(3, 5) }, () => `s${getRandomId()}`),
+        };
+
+        detailedUsers.push(user);
+    }
+    return detailedUsers;
+};
