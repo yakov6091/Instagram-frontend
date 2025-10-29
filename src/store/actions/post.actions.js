@@ -120,6 +120,15 @@ export async function togglePostLike(postId, userId, user, postObj) { // FIXED: 
         store.dispatch({ type: TOGGLE_POST_LIKE, postId: actualPostId, user })
         throw err
     }
+
+    try {
+        // Fetch the authoritative post from storage and update the store so the UI matches persisted state
+        const savedPost = await postService.getById(actualPostId)
+        if (savedPost) store.dispatch({ type: UPDATE_POST, post: savedPost })
+    } catch (err) {
+        // Non-fatal: if we can't fetch the saved post, keep optimistic state but log the error
+        console.warn('Post action -> Failed to refresh post after toggling like', err)
+    }
 }
 
 

@@ -29,6 +29,13 @@
 
 }
 
+/* Ensure the details column centers its content vertically next to the avatar */
+.profile-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 .profile-details h1,
 .profile-details h2 {
     margin: 0;

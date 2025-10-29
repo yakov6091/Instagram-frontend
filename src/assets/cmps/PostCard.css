@@ -50,7 +50,19 @@
     object-fit: cover;
 }
 
+/* Ensure avatar + name link are vertically centered together */
+.profile-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: inherit;
+}
+
 .name {
+    display: inline-block;
+
+    align-items: center;
     font-weight: 600;
     color: var(--color2);
 }

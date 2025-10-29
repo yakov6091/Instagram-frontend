@@ -31,17 +31,18 @@ export function Profile({ user }) {
         return (
             <div className="post-grid">
                 {postsToDisplay.map((post, idx) => (
-                    // Link to the post details page (Crucial for modal logic)
+                    // Link to the post details page (modal). Note: the app routing uses '/:profile_id' for profiles,
+                    // so background pathname should be `/${user._id}` so the modal knows where to return.
                     <Link
                         key={post._id || post.id || `${user._id}-p-${idx}`}
                         to={`/post/${post._id || post.id || ''}`}
-                        // This state tells the router to render the modal on top of the current route
-                        state={{ background: { pathname: `/profile/${user._id}` } }}
+                        state={{ background: { pathname: `/${user._id}` } }}
                         className="post-item"
                     >
                         <img
                             src={post.thumbnailUrl || post.imgUrl}
                             className="post-thumbnail"
+                            loading="lazy"
                         />
                     </Link>
                 ))}
@@ -62,7 +63,7 @@ export function Profile({ user }) {
                 </div>
 
                 <div className="profile-details">
-                    <h2 className="profile-name">{user.fullname}</h2>
+                    <h2 className="profile-name">{user.username || user.fullname}</h2>
 
                     <div className="profile-stats">
                         <span><b>{galleryPosts.length}</b>

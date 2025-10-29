@@ -36,9 +36,13 @@ export function postReducer(state = initialState, action = {}) {
             return { ...state, posts, lastPosts: state.posts }
 
         case UPDATE_POST:
-            posts = state.posts.map(post =>
-                post._id === action.post._id ? action.post : post
-            )
+            posts = state.posts.map(post => {
+                if (post._id !== action.post._id) return post
+                // Preserve any existing _renderId so React keys remain stable and components don't remount
+                const updated = { ...action.post }
+                if (post._renderId) updated._renderId = post._renderId
+                return updated
+            })
             return { ...state, posts, lastPosts: state.posts }
 
         case REMOVE_POST:

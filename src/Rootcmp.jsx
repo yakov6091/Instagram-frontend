@@ -4,9 +4,9 @@ import { NavBar } from "./cmps/NavBar"
 import { PostDetails } from "./cmps/PostDetails"
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { useEffect } from "react"
-import { login } from "./store/actions/user.actions"
+import { login, loadSuggestedUsers } from "./store/actions/user.actions"
 import { loadPosts } from "./store/actions/post.actions"
-import { UsersPreview } from "./cmps/usersPreview"
+import { UsersPreview } from "./cmps/UsersPreview"
 import './assets/main.css'
 
 
@@ -18,6 +18,8 @@ export function App() {
     useEffect(() => {
         login()
         loadPosts()
+        // Ensure we have suggested users available so profile pages for other users can be resolved
+        loadSuggestedUsers()
     }, [])
 
     const onClose = () => {

@@ -155,7 +155,7 @@ export function PostDetails({ onClose }) {
                     <div className="post-caption-owner-details comment">
                         <img className="profile-thumb" src={by.imgUrl} />
                         <div className="caption-text-content">
-                            <span className="username">{by.fullname}</span>
+                            <span className="username">{by.username || by.fullname}</span>
                             {caption}
                         </div>
                     </div>

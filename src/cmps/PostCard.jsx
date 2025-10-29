@@ -136,11 +136,14 @@ export function PostCard({ post }) {
         <section className="post-card-container">
 
             <header className="header-container">
-                <img
-                    className="profile-thumb"
-                    src={by.imgUrl}
-                />
-                <span className="name">{by.username || by.fullname}</span>
+                {/* Link to the author's profile. The app uses '/:profile_id' as the profile route. */}
+                <Link to={`/${by._id}`} state={{ background: location }} className="profile-link">
+                    <img
+                        className="profile-thumb"
+                        src={by.imgUrl}
+                    />
+                    <span className="name">{by.username || by.fullname}</span>
+                </Link>
                 <span className="time">{formattedTime}</span>
                 <span className="dots">{Svgs.dots}</span>
             </header>
