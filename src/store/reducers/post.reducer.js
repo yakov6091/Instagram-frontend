@@ -3,6 +3,7 @@ export const SET_POSTS = 'SET_POSTS'
 export const ADD_POST = 'ADD_POST'
 export const UPDATE_POST = 'UPDATE_POST'
 export const REMOVE_POST = 'REMOVE_POST'
+export const REPLACE_POST = 'REPLACE_POST'
 export const TOGGLE_POST_LIKE = 'TOGGLE_POST_LIKE'
 export const ADD_POST_COMMENT = 'ADD_POST_COMMENT'
 export const REMOVE_POST_COMMENT = 'REMOVE_POST_COMMENT'
@@ -42,6 +43,20 @@ export function postReducer(state = initialState, action = {}) {
 
         case REMOVE_POST:
             posts = state.posts.filter(post => post._id !== action.postId)
+            return { ...state, posts, lastPosts: state.posts }
+
+        case REPLACE_POST:
+            // Replace a temporary/generated post (oldId) with a newly saved post while keeping the same position
+            posts = [...state.posts]
+            const idx = posts.findIndex(p => p._id === action.oldId)
+            if (idx !== -1) {
+                // Preserve a stable render id so React keys don't change and components won't remount
+                const replaced = { ...action.post, _renderId: action.oldId }
+                posts.splice(idx, 1, replaced)
+            } else {
+                // If not found, prepend as fallback
+                posts = [{ ...action.post, _renderId: action.oldId }, ...state.posts]
+            }
             return { ...state, posts, lastPosts: state.posts }
 
         case TOGGLE_POST_LIKE:

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useMemo, useRef } from "react"
 import { Svgs } from "./Svg"
 import { Link, useLocation } from "react-router-dom"
 import { useSelector } from "react-redux"
@@ -27,6 +27,24 @@ export function PostCard({ post }) {
     const isLiked = user ? likedBy.some(like => like._id === user._id) : false
     const likesCount = likedBy.length
 
+    // Keep the original real likes count at mount so we can show a stable baseline for generated posts
+    const initialRealLikes = useRef(likedBy.length)
+
+    // deterministic base number derived from the post id (stable across renders)
+    const baseRandom = useMemo(() => {
+        if (!_id) return 0
+        let sum = 0
+        for (let i = 0; i < _id.length; i++) sum = (sum * 31 + _id.charCodeAt(i)) >>> 0
+        return (sum % 100) + 1
+    }, [_id])
+
+    // Display likes = (baseRandom if there were no real likes at mount) + current real likes
+    const displayLikes = useMemo(() => {
+        const realLikesNow = likedBy.length
+        const baseline = initialRealLikes.current === 0 ? baseRandom : 0
+        return baseline + realLikesNow
+    }, [baseRandom, likedBy.length])
+
     // Determine if the current post is in the user's saved list
     const isSaved = user && user.savedPostIds ? user.savedPostIds.includes(_id) : false
 
@@ -35,6 +53,13 @@ export function PostCard({ post }) {
 
     // Format timestamp
     const formattedTime = createdAt ? timeAgo(createdAt) : ''
+
+    // Pick a random comment for preview (stable per render unless comments/_id change)
+    const randomComment = useMemo(() => {
+        if (!comments || comments.length === 0) return null
+        const idx = Math.floor(Math.random() * comments.length)
+        return comments[idx]
+    }, [comments.length, _id])
 
     // Handle emoji
     function handleEmojiClick(emojiData) {
@@ -145,7 +170,7 @@ export function PostCard({ post }) {
             </div>
 
             <div className="like-span">
-                <span className="likes-count">{likesCount} {likesCount === 1 ? "Like" : "Likes"}</span>
+                <span className="likes-count">{displayLikes} {displayLikes === 1 ? "Like" : "Likes"}</span>
             </div>
 
 

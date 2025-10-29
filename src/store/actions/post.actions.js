@@ -3,6 +3,7 @@ import {
     ADD_POST,
     REMOVE_POST,
     UPDATE_POST,
+    REPLACE_POST,
     SET_POSTS,
     SET_IS_LOADING,
     TOGGLE_POST_LIKE,
@@ -93,8 +94,9 @@ export async function togglePostLike(postId, userId, user, postObj) { // FIXED: 
                 // Remove temporary/generated id so storage assigns a real unique id
                 delete toSave._id
                 const savedPost = await postService.save(toSave)
-                // Update store with the saved post (new _id)
-                store.dispatch({ type: UPDATE_POST, post: savedPost })
+                // Replace the temporary/generated post in the store with the newly saved post
+                // Keep the same position by replacing the old temp id with savedPost
+                store.dispatch({ type: REPLACE_POST, oldId: postObj._id, post: savedPost })
                 actualPostId = savedPost._id
             } catch (saveErr) {
                 console.error('Post action -> Cannot persist suggested post before toggling like', saveErr)
@@ -131,7 +133,9 @@ export async function addPostComment(postId, comment, postObj) { // accepts opti
                 const toSave = { ...postObj }
                 delete toSave._id
                 const savedPost = await postService.save(toSave)
-                store.dispatch({ type: UPDATE_POST, post: savedPost })
+                // Replace the temporary/generated post in the store with the newly saved post
+                // Keep the same position by replacing the old temp id with savedPost
+                store.dispatch({ type: REPLACE_POST, oldId: postObj._id, post: savedPost })
                 actualPostId = savedPost._id
             } catch (saveErr) {
                 console.error('Post action -> Cannot persist suggested post before adding comment', saveErr)
