@@ -6,6 +6,9 @@ export function UsersPreview() {
     const user = useSelector(state => state.userModule.user)
     const suggestedUsers = useSelector(state => state.userModule.suggestedUsers)
 
+    // Logged user's mini posts (from user.posts which stores miniPost objects)
+    const userPosts = user?.posts || []
+
     useEffect(() => {
         if (user && suggestedUsers.length === 0) {
             loadSuggestedUsers();
@@ -27,13 +30,20 @@ export function UsersPreview() {
         <section className="users-preview-container">
             {/* Logged-in User Info Row */}
             <div className="logged-user-info">
-                <img className="user-avatar" src="" />
+                <img
+                    className="user-avatar"
+                    src={user?.imgUrl || ''}
+                    alt={user?.username || 'user'}
+                    style={{ width: 56, height: 56, borderRadius: '50%', objectFit: 'cover' }}
+                />
                 <div className="user-details">
-                    <span className="user-username">Yakov</span>
-                    <span className="user-fullname">Yakov</span>
+                    <span className="user-username">{user?.username || 'NoUsername'}</span>
+                    <span className="user-fullname">{user?.fullname || ''}</span>
                 </div>
                 <button className="switch-btn">Switch</button>
             </div>
+
+
 
             {/* Suggestions Header */}
             <div className="suggestions-header">
@@ -52,7 +62,10 @@ export function UsersPreview() {
 
                     return (
                         <li className="user-prev-item" key={suggestedUser._id}>
-                            <img className="user-avatar-sm" src={suggestedUser.imgUrl} />
+                            <img
+                                className="user-avatar-sm"
+                                src={suggestedUser.imgUrl}
+                            />
 
                             <div className="user-details">
                                 <h4 className="suggestion-username">{suggestedUser.username}</h4>
@@ -63,6 +76,7 @@ export function UsersPreview() {
                                 onClick={() => handleFollow(suggestedUser._id)}>
 
                                 {isFollowing ? 'Following' : 'Follow'}</button>
+
                         </li>
                     )
                 })}

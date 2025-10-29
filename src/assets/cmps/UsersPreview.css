@@ -114,3 +114,9 @@
     cursor: pointer;
     flex-shrink: 0;
 }
+
+/* If small thumbnail previews were added to suggestion items, hide them here
+   so the sidebar shows only avatar, username and follow button. */
+.user-prev-item img:not(.user-avatar-sm) {
+    display: none;
+}

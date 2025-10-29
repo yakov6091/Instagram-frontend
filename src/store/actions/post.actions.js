@@ -7,6 +7,7 @@ import {
     SET_IS_LOADING,
     TOGGLE_POST_LIKE,
     ADD_POST_COMMENT,
+    REMOVE_POST_COMMENT,
     TOGGLE_COMMENT_LIKE
 } from '../reducers/post.reducer.js'
 import { store } from '../store'
@@ -19,7 +20,16 @@ export async function loadPosts(filterBy) {
     store.dispatch({ type: SET_IS_LOADING, isLoading: true })
     try {
         const posts = await postService.query(filterBy)
-        store.dispatch({ type: SET_POSTS, posts })
+        // Merge fetched posts with any posts already in the store (e.g., suggested users' generated posts)
+        const existingPosts = store.getState().postModule.posts || []
+        // Merge and dedupe by _id to avoid duplicate keys
+        const map = new Map()
+        // Add loaded posts first
+        posts.forEach(p => map.set(p._id, p))
+        // Add any existing posts that aren't present in loaded posts
+        existingPosts.forEach(p => { if (!map.has(p._id)) map.set(p._id, p) })
+        const merged = Array.from(map.values())
+        store.dispatch({ type: SET_POSTS, posts: merged })
     } catch (err) {
         console.error('Post action -> Cannot load posts', err)
         throw err
@@ -70,37 +80,83 @@ export async function savePost(post) {
 // --------------------------------------------------
 // Toggle like on a post (optimistic update)
 // --------------------------------------------------
-export async function togglePostLike(postId, userId, user) { // FIXED: Removed Thunk signature
+export async function togglePostLike(postId, userId, user, postObj) { // FIXED: Removed Thunk signature; accepts optional postObj to persist suggested posts
+    // First, ensure the post exists in the backend/storage before optimistic update
+    let actualPostId = postId
+    try {
+        await postService.getById(postId)
+    } catch (err) {
+        // If post not in storage but we have the post object (e.g., suggested/generated), persist it first
+        if (postObj) {
+            try {
+                const toSave = { ...postObj }
+                // Remove temporary/generated id so storage assigns a real unique id
+                delete toSave._id
+                const savedPost = await postService.save(toSave)
+                // Update store with the saved post (new _id)
+                store.dispatch({ type: UPDATE_POST, post: savedPost })
+                actualPostId = savedPost._id
+            } catch (saveErr) {
+                console.error('Post action -> Cannot persist suggested post before toggling like', saveErr)
+                return
+            }
+        } else {
+            console.error('Post action -> Cannot toggle like: post not found in storage', postId)
+            return
+        }
+    }
+
     // Optimistic dispatch
-    store.dispatch({ type: TOGGLE_POST_LIKE, postId, user })
+    store.dispatch({ type: TOGGLE_POST_LIKE, postId: actualPostId, user })
 
     try {
         // You must await the service call to ensure data is saved
-        await postService.toggleLike(postId, userId)
+        await postService.toggleLike(actualPostId, userId)
     } catch (err) {
         console.error('Post action -> Cannot toggle like on service', err)
-        // Optional Rollback: If service fails, dispatch again to revert the like/unlike change
-        // store.dispatch({ type: TOGGLE_POST_LIKE, postId, user }) 
+        // Rollback optimistic change
+        store.dispatch({ type: TOGGLE_POST_LIKE, postId: actualPostId, user })
         throw err
     }
 }
 
 
-export async function addPostComment(postId, comment) { // FIXED: Made function async
+export async function addPostComment(postId, comment, postObj) { // accepts optional postObj to persist suggested posts
+    let actualPostId = postId
+    try {
+        await postService.getById(postId)
+    } catch (err) {
+        if (postObj) {
+            try {
+                const toSave = { ...postObj }
+                delete toSave._id
+                const savedPost = await postService.save(toSave)
+                store.dispatch({ type: UPDATE_POST, post: savedPost })
+                actualPostId = savedPost._id
+            } catch (saveErr) {
+                console.error('Post action -> Cannot persist suggested post before adding comment', saveErr)
+                return
+            }
+        } else {
+            console.error('Post action -> Cannot save comment: post not found in storage', postId)
+            return
+        }
+    }
+
     // Add the comment optimistically
-    store.dispatch({ type: ADD_POST_COMMENT, postId, comment })
+    store.dispatch({ type: ADD_POST_COMMENT, postId: actualPostId, comment })
 
     try {
         // Try saving to the backend
-        await postService.addComment(postId, comment)
+        await postService.addComment(actualPostId, comment)
     } catch (err) {
         console.error('Post action -> Cannot save comment', err)
 
         // Rollback: remove the comment from the UI if save fails
         store.dispatch({
-            type: 'REMOVE_POST_COMMENT', // Ensure this type is defined in your reducer
-            postId,
-            commentId: comment._id, // assuming comment has an _id or temp ID
+            type: REMOVE_POST_COMMENT,
+            postId: actualPostId,
+            commentId: comment._id,
         })
         throw err
     }

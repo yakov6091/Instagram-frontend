@@ -2,7 +2,7 @@ import { PostList } from "../cmps/PostList"
 import { useEffect } from "react"
 import { useSelector } from "react-redux"
 import { loadPosts } from "../store/actions/post.actions"
-import { UsersPreview } from "../cmps/usersPreview"
+import { UsersPreview } from "../cmps/UsersPreview"
 
 export function HomePage() {
     // Read posts from Redux store

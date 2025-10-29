@@ -8,6 +8,8 @@ import {
     TOGGLE_FOLLOW,
 } from '../reducers/user.reducer.js'
 
+import { SET_POSTS } from '../reducers/post.reducer.js'
+
 import { userService } from '../../../services/user.service.js'
 
 // --- USER DATA (Simulated API Response) ---
@@ -73,6 +75,37 @@ export function loadSuggestedUsers() {
             type: SET_SUGGESTED_USERS,
             suggestedUsers,
         });
+
+        // Also add suggested users' posts into the posts store so they behave like real posts
+        try {
+            const postsFromSuggested = suggestedUsers.flatMap(su => (su.posts || []).map(p => ({
+                _id: `${su._id}-${p._id}`,
+                imgUrl: p.imgUrl || p.thumbnailUrl,
+                thumbnailUrl: p.thumbnailUrl,
+                txt: p.txt || '',
+                by: {
+                    _id: su._id,
+                    username: su.username,
+                    imgUrl: su.imgUrl,
+                },
+                comments: p.comments || [],
+                likedBy: p.likedBy || [],
+                createdAt: p.createdAt || Date.now(),
+            })))
+
+            const existingPosts = store.getState().postModule.posts || []
+            // Merge and dedupe posts by _id to avoid duplicate-key warnings in React
+            const map = new Map()
+            // Keep existing posts first
+            existingPosts.forEach(p => map.set(p._id, p))
+            // Add/overwrite with suggested posts (so they show up too)
+            postsFromSuggested.forEach(p => map.set(p._id, p))
+
+            const merged = Array.from(map.values())
+            store.dispatch({ type: SET_POSTS, posts: merged })
+        } catch (err) {
+            console.error('Failed to add suggested users posts to posts store', err)
+        }
 
     } catch (err) {
         console.error('User action -> Cannot load suggested users', err);

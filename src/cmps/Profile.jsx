@@ -30,11 +30,11 @@ export function Profile({ user }) {
         }
         return (
             <div className="post-grid">
-                {postsToDisplay.map(post => (
+                {postsToDisplay.map((post, idx) => (
                     // Link to the post details page (Crucial for modal logic)
                     <Link
-                        key={post._id}
-                        to={`/post/${post._id}`}
+                        key={post._id || post.id || `${user._id}-p-${idx}`}
+                        to={`/post/${post._id || post.id || ''}`}
                         // This state tells the router to render the modal on top of the current route
                         state={{ background: { pathname: `/profile/${user._id}` } }}
                         className="post-item"

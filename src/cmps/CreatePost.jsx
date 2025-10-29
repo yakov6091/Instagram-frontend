@@ -60,14 +60,18 @@ export function CreatePost({ onPostCreated }) {
                 createdAt: Date.now(),
             }
 
-            //Call the async action function directly instead of dispatching
-            await savePost(newPost)
+            // Call the async action function directly instead of dispatching
+            const savedPost = await savePost(newPost)
 
             // Cleanup happens only after successful save
             setImgUrl(null)
             setCaption("")
+            // Reset file input value so the same file can be re-selected later
+            const fileInput = document.getElementById('fileInput')
+            if (fileInput) fileInput.value = null
 
-            if (onPostCreated) onPostCreated(newPost);
+            // Notify parent with the saved post (contains the real _id)
+            if (onPostCreated) onPostCreated(savedPost);
 
         } catch (err) {
             console.error("Failed to save post:", err)

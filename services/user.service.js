@@ -9,26 +9,28 @@ const getRandomName = (arr) => arr[getRandomInt(0, arr.length - 1)]; // The miss
 const CURRENT_USER_ID = 'u101';
 
 // Helper to create a user mini-profile for 'following'/'followers' arrays
-const createMiniProfile = (idPrefix, index) => {
+const createMiniProfile = (idPrefix, userIdx, index) => {
     const randomName = getRandomName(names);
-    const id = `${idPrefix}${index}${getRandomId()}`;
+    // Make the id deterministic and include userIdx to avoid collisions across multiple users
+    const id = `${idPrefix}-${userIdx}-${index}-${getRandomId()}`;
+    const gender = index % 2 === 0 ? 'men' : 'women'
+    const avatarId = getRandomInt(1, 99)
     return {
         _id: id,
-        fullname: `${randomName} User ${index}`,
-        // Generate a random color placeholder image
-        imgUrl: `https://placehold.co/40x40/${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}/FFFFFF?text=${randomName[0]}`,
+        fullname: `${randomName}`,
+        username: `${randomName.toLowerCase()}${getRandomInt(1, 99)}`,
+        imgUrl: `https://randomuser.me/api/portraits/${gender}/${avatarId}.jpg`,
     };
 };
 
 /**
- * Generates 10 detailed mock users for suggestion, adhering to the required format.
- * @param {number} count - The number of users to generate.
- * @returns {Array<Object>} The list of mock user profiles.
+ Generates 10 detailed mock users for suggestion, adhering to the required format.
  */
 function generateMockUsers(count = 10) {
     const detailedUsers = [];
     const usedUsernames = new Set();
 
+    const usedUserIds = new Set()
     for (let i = 0; i < count; i++) {
         const randomName = getRandomName(names);
         let username = `${randomName.toLowerCase()}${getRandomInt(10, 99)}`;
@@ -37,7 +39,10 @@ function generateMockUsers(count = 10) {
         }
         usedUsernames.add(username);
 
-        const userId = `r${getRandomId()}`;
+        // Ensure unique userId
+        let userId = `r${getRandomId()}`;
+        while (usedUserIds.has(userId)) userId = `r${getRandomId()}`
+        usedUserIds.add(userId)
         const followerCount = getRandomInt(5, 10);
         const followingCount = getRandomInt(2, 5);
         const postCount = getRandomInt(3, 5);
@@ -47,18 +52,22 @@ function generateMockUsers(count = 10) {
             username: username,
             fullname: `${randomName} ${getRandomName(['Rider', 'Hiker', 'Chef', 'Dev'])}`,
             // Generate a random color placeholder image
-            imgUrl: `https://placehold.co/60x60/${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}/FFFFFF?text=${randomName[0]}`,
+            // Use randomuser avatars for user icons
+            imgUrl: `https://randomuser.me/api/portraits/${i % 2 === 0 ? 'men' : 'women'}/${getRandomInt(1, 99)}.jpg`,
 
+            // Use deterministic post ids based on userId and index to avoid collisions
             posts: Array.from({ length: postCount }, (_, pIndex) => ({
-                _id: `p${getRandomId()}${pIndex}`,
-                thumbnailUrl: `https://placehold.co/300x300/FCA5A5/FFFFFF?text=Post${pIndex + 1}`,
+                _id: `${userId}-p${pIndex}`,
+                thumbnailUrl: `https://picsum.photos/seed/${i * 10 + pIndex}/300/300`,
+                imgUrl: `https://picsum.photos/seed/${i * 10 + pIndex}/800/800`,
                 isVideo: Math.random() < 0.2,
+                createdAt: Date.now() - (pIndex * 1000 * 60 * 60),
             })),
 
-            following: Array.from({ length: followingCount }, (_, fIndex) => createMiniProfile('uF', fIndex)),
+            following: Array.from({ length: followingCount }, (_, fIndex) => createMiniProfile('uF', i, fIndex)),
 
-            // Generate followers
-            followers: Array.from({ length: followerCount }, (_, fIndex) => createMiniProfile('uR', fIndex)),
+            // Generate followers (include user index in id generation)
+            followers: Array.from({ length: followerCount }, (_, fIndex) => createMiniProfile('uR', i, fIndex)),
 
             likedPostIds: Array.from({ length: getRandomInt(3, 5) }, () => `s${getRandomId()}`),
             savedPostIds: Array.from({ length: getRandomInt(3, 5) }, () => `s${getRandomId()}`),

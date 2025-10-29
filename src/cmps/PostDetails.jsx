@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { Svgs } from "./Svg"
-import { useParams } from 'react-router-dom'
+import { useParams, useLocation } from 'react-router-dom'
 import { useSelector } from "react-redux"
 import { togglePostLike, addPostComment, toggleCommentLike } from "../store/actions/post.actions"
 
@@ -9,15 +9,23 @@ export function PostDetails({ onClose }) {
     const { user } = useSelector(state => state.userModule)
     const { posts } = useSelector(state => state.postModule)
 
+    const location = useLocation()
     const [post, setPost] = useState(null)
     const [commentTxt, setCommentTxt] = useState('')
 
     useEffect(() => {
+        // 1. If the Link included the post in location.state, use it (works for suggested users' posts)
+        if (location.state && location.state.post) {
+            setPost(location.state.post)
+            return
+        }
+
+        // 2. Otherwise, try to find the post in the posts array from the store
         if (posts && postId) {
             const foundPost = posts.find(post => post._id === postId)
             if (foundPost) setPost(foundPost)
         }
-    }, [posts, postId])
+    }, [posts, postId, location.state])
 
     if (!post) {
         return <div className="loading-post-details"><h1>Loading post...</h1></div>
@@ -43,7 +51,7 @@ export function PostDetails({ onClose }) {
             imgUrl: user.imgUrl
         }
         // Call the async function directly
-        await togglePostLike(post._id, user._id, userMiniProfile)
+        await togglePostLike(post._id, user._id, userMiniProfile, post)
     }
 
     //  Directly call the async action function
@@ -51,11 +59,11 @@ export function PostDetails({ onClose }) {
         ev.preventDefault()
         if (!commentTxt.trim() || !user) return
 
-        // This is a minimal ID generator for temporary optimistic updates
+        // This is a minimal ID generator
         const tempId = 'c' + Date.now() + Math.random().toString(36).substring(2, 5)
 
         const newComment = {
-            _id: tempId, // Add a temporary ID for the optimistic update/rollback logic
+            _id: tempId,
             txt: commentTxt.trim(),
             likedBy: [],
             by: {
@@ -65,13 +73,13 @@ export function PostDetails({ onClose }) {
                 imgUrl: user.imgUrl
             }
         }
-        // NEW: Call the async function directly
-        await addPostComment(post._id, newComment)
+        // Call the async function directly; pass post so action can persist if needed
+        await addPostComment(post._id, newComment, post)
         setCommentTxt('')
     }
 
     // Function to render an individual comment
-    const renderComment = (comment) => {
+    const renderComment = (comment, idx) => {
         const isCurrentUserComment = user && comment.by._id === user._id
         const displayName = isCurrentUserComment ? 'You' : comment.by.fullname;
 
@@ -85,8 +93,8 @@ export function PostDetails({ onClose }) {
                 : '';
 
         return (
-            // Using comment._id is best, falling back to Math.random() if not available
-            <div className="comment" key={comment._id || Math.random()}>
+            // Using comment._id is best, falling back to comment.id or a composite id if not available
+            <div className="comment" key={comment._id || comment.id || `${post._id}-c-${idx}`}>
                 {/* Main comment content wrapper */}
                 <div className="comment-main-content">
                     <span className="username">{displayName}</span>
@@ -152,7 +160,7 @@ export function PostDetails({ onClose }) {
                         </div>
                     </div>
 
-                    {comments?.map(renderComment)}
+                    {comments?.map((c, idx) => renderComment(c, idx))}
                 </div>
 
                 {/* Likes + add comment */}

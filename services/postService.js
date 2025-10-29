@@ -151,8 +151,8 @@ function toggleCommentLike(postId, commentId, userId) {
     return getById(postId).then(post => {
         if (!post) return Promise.reject('Post not found')
 
-        // Find the comment
-        const comment = post.comments.find(comment => comment._id === commentId || c.id === commentId)
+        // Find the comment (support older data that used 'id' instead of '_id')
+        const comment = post.comments.find(c => c._id === commentId || c.id === commentId)
 
         if (!comment) return Promise.reject('Comment not found')
 

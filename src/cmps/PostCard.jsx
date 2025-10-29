@@ -60,8 +60,9 @@ export function PostCard({ post }) {
             imgUrl: user.imgUrl
         }
 
-        // Call the async action function directly
-        await togglePostLike(_id, user._id, userMiniProfile)
+        // Call the async action function directly; pass the full post object so the action
+        // can persist suggested/generated posts before performing the like.
+        await togglePostLike(_id, user._id, userMiniProfile, post)
     }
 
     async function handleSave() {
@@ -99,8 +100,9 @@ export function PostCard({ post }) {
             }
         }
 
-        // Call the async action function directly
-        await addPostComment(_id, newComment)
+        // Call the async action function directly; pass the full post object so the action
+        // can persist suggested/generated posts before adding the comment.
+        await addPostComment(_id, newComment, post)
 
         setCommentTxt('')
     }
@@ -119,7 +121,7 @@ export function PostCard({ post }) {
             </header>
 
             <div className="img-container">
-                <img src={imgUrl} />
+                <img src={imgUrl} alt={txt || 'post image'} loading="lazy" />
             </div>
 
             <div className="button-container">
@@ -130,7 +132,7 @@ export function PostCard({ post }) {
                     {isLiked ? Svgs.likeFilled : Svgs.likeOutLine}
                 </button>
 
-                <Link to={postUrl} state={{ background: location }}>
+                <Link to={postUrl} state={{ background: location, post }}>
                     <button>{Svgs.comment}</button>
                 </Link>
 
@@ -145,6 +147,7 @@ export function PostCard({ post }) {
             <div className="like-span">
                 <span className="likes-count">{likesCount} {likesCount === 1 ? "Like" : "Likes"}</span>
             </div>
+
 
             <div className="post-txt">
                 <span><b>{by.username || by.fullname}</b> {txt}</span>
