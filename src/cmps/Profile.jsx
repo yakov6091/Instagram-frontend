@@ -51,7 +51,7 @@ export function Profile({ user }) {
                     <Link
                         key={post._id || post.id || `${user._id}-p-${idx}`}
                         to={`/post/${post._id || post.id || ''}`}
-                        // state is used to return to the profile page after closing the modal
+                        // Background path set to only the ID
                         state={{ background: { pathname: `/${user._id}` } }}
                         className="post-item"
                     >

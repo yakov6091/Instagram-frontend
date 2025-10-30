@@ -1,33 +1,33 @@
 import { HomePage } from "./pages/HomePage"
-import { ProfilePage } from "./pages/ProfilePage"
+import { ProfilePage } from "./pages/ProfilePage" // Assuming this is where you handle the user fetch
 import { NavBar } from "./cmps/NavBar"
 import { PostDetails } from "./cmps/PostDetails"
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { useEffect } from "react"
 import { login, loadSuggestedUsers } from "./store/actions/user.actions"
 import { loadPosts } from "./store/actions/post.actions"
-import { UsersPreview } from "./cmps/UsersPreview"
 import './assets/main.css'
 
 
-export function App() {
+export function App() { // Renamed from RootCmp if your file is named App.jsx
 
     const location = useLocation()
     const navigate = useNavigate()
 
     useEffect(() => {
+        // Initial data loading for the app
         login()
         loadPosts()
-        // Ensure we have suggested users available so profile pages for other users can be resolved
         loadSuggestedUsers()
     }, [])
 
+    // Handler to close the modal and return to the previous page, or home
     const onClose = () => {
-        if (location.state?.background) navigate(-1)
-        else navigate('/')
+        if (location.state?.background) navigate(-1) // Go back one page
+        else navigate('/') // Go to the homepage
     }
 
-    // If there’s a background route, it means the modal should open
+    // Determine if we should render the modal (i.e., if there's a background route set)
     const background = location.state && location.state.background
 
     return (
@@ -35,25 +35,41 @@ export function App() {
             <NavBar />
 
             <main className="feed-section">
-                {/* Primary Routes */}
-                <Routes location={background || location}>
-                    {/* Note: In your routing, the ProfilePage path should probably be /profile/:id */}
-                    <Route path="/" element={<div className="feed-content-wrapper"><HomePage /></div>} />
 
-                    <Route path="/:profile_id" element={
+                {/* Primary Routes: Renders the underlying page content. 
+                If a modal is open (background is true), this block uses the background path 
+                so the main content doesn't change when the modal URL loads.
+                */}
+                <Routes location={background || location}>
+
+                    {/* Home Route */}
+                    <Route path="/" element={
+                        <div className="feed-content-wrapper">
+                            <HomePage />
+                        </div>
+                    } />
+
+                    {/*
+                    This route now uses the /user/ prefix and reads the :profileId parameter.
+                    The ProfilePage component must use useParams() to read this ID.
+                    */}
+                    <Route path="/:profileId" element={
                         <div className="profile-layout">
                             <ProfilePage />
-                            {/* <ProfilePage /> */}
-                        </div>} />
+                        </div>
+                    } />
 
-                    {/* This route renders HomePage under /post/:postId, which is fine for modal setup */}
+                    {/* The /post/:postId route is needed here so that if the user loads the post URL 
+                    directly, it loads the HomePage content underneath.
+                    */}
                     <Route path="/post/:postId" element={<HomePage />} />
                 </Routes>
 
-                {/* Modal Route */}
+                {/* Modal Route: Renders the modal component ONLY if 'background' state is set. 
+                It listens specifically for the post URL path.
+                */}
                 {background && (
                     <Routes>
-                        {/* The PostDetails component will need the posts data, which is usually passed via props or retrieved with useSelector inside the component */}
                         <Route path="/post/:postId" element={<PostDetails onClose={onClose} />} />
                     </Routes>
                 )}

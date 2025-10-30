@@ -67,6 +67,8 @@ export function loadSuggestedUsers() {
     store.dispatch({ type: SET_IS_LOADING, isLoading: true })
 
     try {
+        // This is where the error occurs if userService.generateMockUsers() 
+        // internally uses an undeclared variable like followingCount.
         const suggestedUsers = userService.generateMockUsers()
 
         store.dispatch({
@@ -168,4 +170,3 @@ export async function togglePostSave(postId) {
     })
 
 }
-

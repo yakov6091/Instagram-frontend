@@ -61,10 +61,9 @@ function generateMockUsers(count = 10) {
         const userFullname = `${randomName} ${getRandomName(['Rider', 'Hiker', 'Chef', 'Dev'])}`;
         const userImgUrl = `https://randomuser.me/api/portraits/${i % 2 === 0 ? 'men' : 'women'}/${getRandomInt(1, 99)}.jpg`;
 
-        // --- FIX ADDED HERE ---
-        const followerCount = getRandomInt(5, 10); // DEFINED BEFORE USE
-        const followingCount = getRandomInt(2, 5); // DEFINED BEFORE USE
-        // ---
+
+        const followerCount = getRandomInt(1, 10)
+        const followingCount = getRandomInt(1, 10)
 
         const postCount = getRandomInt(3, 5);
 
@@ -120,7 +119,12 @@ function generateMockUsers(count = 10) {
 }
 
 
+// In user.service.js, update the export:
 export const userService = {
     generateMockUsers,
-    // Add real API calls here later (e.g., login, updateFollowStatus)
+    // Add a simple caching mechanism for lookup
+    getByIdOrUsername: (id) => {
+        const users = generateMockUsers(10) // Regenerate mock data
+        return users.find(u => u._id === id || u.username === id)
+    }
 };

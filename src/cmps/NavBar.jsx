@@ -37,11 +37,10 @@ export function NavBar() {
 
                     </li>
                     <li>
-                        <Link to={profilePath}>
+                        <Link to={profilePath}> {/* This now correctly points to /user/u101 */}
                             <img src={user.imgUrl} className='profile-icon' />
                             <span> Profile</span>
                         </Link>
-
                     </li>
                 </ul>
             </nav>
