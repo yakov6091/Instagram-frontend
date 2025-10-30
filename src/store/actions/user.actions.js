@@ -15,10 +15,10 @@ import { userService } from '../../../services/user.service.js'
 // --- USER DATA (Simulated API Response) ---
 export const DEMO_USER_DATA = {
     _id: 'u101',
-    username: 'sunflower_power77',
+    username: 'james87',
     password: 'mukmuk',
     fullname: 'sunflower_power77 from CA.',
-    imgUrl: 'https://petapixel.com/assets/uploads/2024/01/The-Star-of-System-Sol-Rectangle-640x800.jpg',
+    imgUrl: 'https://images.unsplash.com/photo-1492447273231-0f8fecec1e3a?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687',
     posts: [
         { _id: 'p101', thumbnailUrl: 'https://petapixel.com/assets/uploads/2024/01/The-Star-of-System-Sol-Rectangle-640x800.jpg', isVideo: false },
     ],
@@ -34,7 +34,7 @@ export const DEMO_USER_DATA = {
 }
 
 // --- Dummy login credentials ---
-const DUMMY_LOGIN_CREDS = { username: 'sunflower_power77', password: 'mukmuk' }
+const DUMMY_LOGIN_CREDS = { username: 'james87', password: 'mukmuk' }
 
 // --------------------------------------------------
 // Login Action

@@ -81,7 +81,8 @@ export function PostDetails({ onClose }) {
     // Function to render an individual comment
     const renderComment = (comment, idx) => {
         const isCurrentUserComment = user && comment.by._id === user._id
-        const displayName = isCurrentUserComment ? 'You' : comment.by.fullname;
+        // MODIFIED: Prioritize username, just like you do for the post caption
+        const displayName = (comment.by.username || comment.by.fullname);
 
         const commentLikedBy = comment.likedBy || []
         const isCommentLiked = user ? commentLikedBy.some(like => like._id === user._id) : false
@@ -95,10 +96,20 @@ export function PostDetails({ onClose }) {
         return (
             // Using comment._id is best, falling back to comment.id or a composite id if not available
             <div className="comment" key={comment._id || comment.id || `${post._id}-c-${idx}`}>
+
+                {/* ADDED: This is the profile picture for the commenter */}
+                <img
+                    className="profile-thumb"
+                    src={comment.by.imgUrl}
+                    alt={`${displayName}'s profile`}
+                />
+
                 {/* Main comment content wrapper */}
                 <div className="comment-main-content">
-                    <span className="username">{displayName}</span>
-                    {comment.txt}
+                    <div> {/* This inner div helps group the text */}
+                        <span className="username">{displayName}</span>
+                        {comment.txt}
+                    </div>
 
                     {/* Like Count */}
                     {likeCountText && <p className="comment-likes-count-text">{likeCountText}</p>}

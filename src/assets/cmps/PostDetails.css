@@ -103,7 +103,8 @@
     margin-bottom: 15px;
 }
 
-.post-caption-owner-details .profile-thumb {
+.post-caption-owner-details .profile-thumb,
+.comment .profile-thumb {
     width: 32px;
     height: 32px;
     border-radius: 50%;
