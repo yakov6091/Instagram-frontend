@@ -89,7 +89,7 @@ function generateMockUsers(count = 10) {
                     isVideo: Math.random() < 0.2,
                     createdAt: Date.now() - (pIndex * 1000 * 60 * 60),
 
-                    txt: `This is post #${pIndex + 1} by ${username}. ${getRandomName(commentTexts)}`,
+                    txt: getRandomName(commentTexts),
 
                     by: {
                         _id: userId,

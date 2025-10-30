@@ -51,7 +51,6 @@ export function Profile({ user }) {
     }
 
 
-
     return (
         <section className="profile-container">
             <div className="profile-header-row">

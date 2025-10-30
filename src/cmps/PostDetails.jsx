@@ -101,7 +101,6 @@ export function PostDetails({ onClose }) {
                 <img
                     className="profile-thumb"
                     src={comment.by.imgUrl}
-                    alt={`${displayName}'s profile`}
                 />
 
                 {/* Main comment content wrapper */}
@@ -154,8 +153,8 @@ export function PostDetails({ onClose }) {
                 <div className="post-details-info">
                     <div className="post-details-header">
                         <div className="user-info">
-                            <img src={user.imgUrl} />
-                            <span className="username">{user.username}</span>
+                            <img src={by.imgUrl} />
+                            <span className="username">{by.username || by.fullname}</span>
                         </div>
 
                     </div>
