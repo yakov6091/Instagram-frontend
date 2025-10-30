@@ -3,8 +3,8 @@ import { Svgs } from "./Svg"
 import { Link } from "react-router-dom"
 import { useSelector } from "react-redux"
 
-export function Profile({ user }) {
-    // Get the global list of posts from the Redux store
+export function Profile() {
+    const { user } = useSelector(state => state.userModule)
     const { posts: allPosts } = useSelector(state => state.postModule)
 
     // Calculate posts that belong to this user

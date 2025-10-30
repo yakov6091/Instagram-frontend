@@ -1,6 +1,6 @@
 // --- MOCK DATA GENERATION HELPERS (Now properly defined) ---
 const names = ['Kai', 'Sasha', 'Leo', 'Mia', 'Jax', 'Zoe', 'Finn', 'Nala', 'Ryu', 'Skye'];
-const commentTexts = ['Wow!', 'Great shot!', 'Love this!', 'Amazing', 'So cool.', 'Where is this?', 'Nice!', 'Awesome view'];
+const commentTexts = ['Wow Wow!', 'Great shot!', 'I Love this!', 'Amazing picture', 'So cool.', 'Where is this?', 'Nice One!', 'Awesome view', 'We have to go there', 'What a picture', 'What a PROO', 'Continue with the great work!'];
 
 const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const getRandomId = () => Math.random().toString(36).substring(2, 9);
@@ -84,7 +84,7 @@ function generateMockUsers(count = 10) {
                 return {
                     _id: postId,
                     thumbnailUrl: `https://picsum.photos/seed/${i * 10 + pIndex}/300/300`,
-                    imgUrl: `https://picsum.photos/seed/${i * 10 + pIndex}/800/800`,
+                    imgUrl: `https://picsum.photos/seed/${i * 10 + pIndex}900/900`,
                     isVideo: Math.random() < 0.2,
                     createdAt: Date.now() - (pIndex * 1000 * 60 * 60),
 
