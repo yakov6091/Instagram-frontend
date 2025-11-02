@@ -16,7 +16,7 @@ export function NavBar() {
         <>
             <nav className="navbar-container">
                 <div className="navbar-logo">
-                    <Link to="/" className="logo-text">{Svgs.instagram}</Link>
+                    <Link to="/" className="logo-text">{Svgs.memora}</Link>
                 </div>
 
                 <ul className="navbar-list">
