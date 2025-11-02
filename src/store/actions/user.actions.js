@@ -67,9 +67,16 @@ export function loadSuggestedUsers() {
     store.dispatch({ type: SET_IS_LOADING, isLoading: true })
 
     try {
-        // This is where the error occurs if userService.generateMockUsers() 
-        // internally uses an undeclared variable like followingCount.
-        const suggestedUsers = userService.generateMockUsers()
+        const currentUser = store.getState().userModule.user;
+        const currentUserId = currentUser ? currentUser._id : null;
+
+        // 🔥 FIX: Use userService.getUsers() to retrieve the static list of all users
+        const allUsers = userService.getUsers();
+
+        // Filter out the current user and take the first few for suggestions
+        const suggestedUsers = allUsers
+            .filter(u => u._id !== currentUserId)
+            .slice(0, 5); // Display max 5 suggested users
 
         store.dispatch({
             type: SET_SUGGESTED_USERS,
@@ -79,7 +86,8 @@ export function loadSuggestedUsers() {
         // Also add suggested users' posts into the posts store so they behave like real posts
         try {
             const postsFromSuggested = suggestedUsers.flatMap(su => (su.posts || []).map(p => ({
-                _id: `${su._id}-${p._id}`,
+                // Use a unique ID structure to avoid collisions with other posts
+                _id: p._id,
                 imgUrl: p.imgUrl || p.thumbnailUrl,
                 thumbnailUrl: p.thumbnailUrl,
                 txt: p.txt || '',
@@ -94,15 +102,26 @@ export function loadSuggestedUsers() {
             })))
 
             const existingPosts = store.getState().postModule.posts || []
-            // Merge and dedupe posts by _id to avoid duplicate-key warnings in React
+
+            // --- 🏆 CRITICAL MERGE LOGIC IMPROVEMENT ---
             const map = new Map()
-            // Keep existing posts first
+
+            // 1. Load existing posts first. They have the authoritative, current state (e.g., likes/comments).
             existingPosts.forEach(p => map.set(p._id, p))
-            // Add/overwrite with suggested posts (so they show up too)
-            postsFromSuggested.forEach(p => map.set(p._id, p))
+
+            // 2. Load suggested posts. They will ONLY overwrite posts that didn't exist before,
+            // or they will act as a *backup* but won't overwrite the existing post's dynamic state.
+            // We use the map.has() check to avoid overwriting a "live" post.
+            postsFromSuggested.forEach(p => {
+                if (!map.has(p._id)) {
+                    map.set(p._id, p)
+                }
+            })
 
             const merged = Array.from(map.values())
             store.dispatch({ type: SET_POSTS, posts: merged })
+            // ---------------------------------------------
+
         } catch (err) {
             console.error('Failed to add suggested users posts to posts store', err)
         }

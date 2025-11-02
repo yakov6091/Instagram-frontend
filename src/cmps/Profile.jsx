@@ -47,21 +47,32 @@ export function Profile() {
 
         return (
             <div className="post-grid">
-                {postsToDisplay.map((post, idx) => (
-                    <Link
-                        key={post._id || post.id || `${user._id}-p-${idx}`}
-                        to={`/post/${post._id || post.id || ''}`}
-                        // Background path set to only the ID
-                        state={{ background: { pathname: `/${user._id}` } }}
-                        className="post-item"
-                    >
-                        <img
-                            src={post.thumbnailUrl || post.imgUrl}
-                            className="post-thumbnail"
-                            loading="lazy"
-                        />
-                    </Link>
-                ))}
+                {postsToDisplay.map((post, idx) => {
+                    // Ensure you are using the correct and unique post ID for the link
+                    const postId = post._id || post.id
+
+                    if (!postId) {
+                        // Skip rendering if a post has no ID (should be fixed in your data)
+                        console.error("Post in gallery is missing an ID:", post)
+                        return null
+                    }
+
+                    return (
+                        <Link
+                            key={postId} // Key must be unique
+                            to={`/post/${postId}`} // Link must use the unique ID
+                            // Background path for modal/contextual routing
+                            state={{ background: { pathname: `/${user._id}` } }}
+                            className="post-item"
+                        >
+                            <img
+                                src={post.thumbnailUrl || post.imgUrl}
+                                className="post-thumbnail"
+                                loading="lazy"
+                            />
+                        </Link>
+                    )
+                })}
             </div>
         )
     }

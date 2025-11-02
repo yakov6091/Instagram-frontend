@@ -82,7 +82,6 @@ export async function savePost(post) {
 // Toggle like on a post (optimistic update)
 // --------------------------------------------------
 export async function togglePostLike(postId, userId, user, postObj) { // FIXED: Removed Thunk signature; accepts optional postObj to persist suggested posts
-    // First, ensure the post exists in the backend/storage before optimistic update
     let actualPostId = postId
     try {
         await postService.getById(postId)
@@ -121,6 +120,7 @@ export async function togglePostLike(postId, userId, user, postObj) { // FIXED: 
         throw err
     }
 
+    // --- 🏆 CRUCIAL REFRESH STEP ADDED ---
     try {
         // Fetch the authoritative post from storage and update the store so the UI matches persisted state
         const savedPost = await postService.getById(actualPostId)
@@ -129,6 +129,7 @@ export async function togglePostLike(postId, userId, user, postObj) { // FIXED: 
         // Non-fatal: if we can't fetch the saved post, keep optimistic state but log the error
         console.warn('Post action -> Failed to refresh post after toggling like', err)
     }
+    // --------------------------------------
 }
 
 
@@ -162,6 +163,13 @@ export async function addPostComment(postId, comment, postObj) { // accepts opti
     try {
         // Try saving to the backend
         await postService.addComment(actualPostId, comment)
+
+        // --- 🏆 CRUCIAL REFRESH STEP ADDED ---
+        // Fetch the authoritative post from storage and update the store
+        const savedPost = await postService.getById(actualPostId)
+        if (savedPost) store.dispatch({ type: UPDATE_POST, post: savedPost })
+        // --------------------------------------
+
     } catch (err) {
         console.error('Post action -> Cannot save comment', err)
 
@@ -184,6 +192,7 @@ export async function toggleCommentLike(postId, commentId, userId, user) {
     } catch (err) {
         console.error('Post action -> Cannot toggle comment like on service', err)
 
+        // Add an optional rollback here if needed, but often comment likes are non-critical
         throw err
     }
 }

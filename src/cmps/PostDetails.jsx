@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { Svgs } from "./Svg"
 import { useParams, useLocation } from 'react-router-dom'
 import { useSelector } from "react-redux"
@@ -9,23 +9,24 @@ export function PostDetails({ onClose }) {
     const { user } = useSelector(state => state.userModule)
     const { posts } = useSelector(state => state.postModule)
 
-    const location = useLocation()
-    const [post, setPost] = useState(null)
     const [commentTxt, setCommentTxt] = useState('')
 
     useEffect(() => {
-        // 1. If the Link included the post in location.state, use it (works for suggested users' posts)
-        if (location.state && location.state.post) {
-            setPost(location.state.post)
-            return
-        }
+        // This ensures the comment input field is cleared whenever we navigate 
+        // to a new post (i.e., when postId changes).
+        setCommentTxt('');
+    }, [postId])
 
-        // 2. Otherwise, try to find the post in the posts array from the store
-        if (posts && postId) {
-            const foundPost = posts.find(post => post._id === postId)
-            if (foundPost) setPost(foundPost)
-        }
-    }, [posts, postId, location.state])
+    const post = useMemo(() => {
+        if (!posts || !postId) return null
+
+        // This is the correct, primary lookup method: find the post by the ID in the URL
+        const foundPost = posts.find(p => p._id === postId || p.id === postId)
+
+        // Return the found post. If the ID is bad, it will be null.
+        return foundPost
+    }, [posts, postId]) // Depend on the global posts array and the ID from the URL
+
 
     if (!post) {
         return <div className="loading-post-details"><h1>Loading post...</h1></div>

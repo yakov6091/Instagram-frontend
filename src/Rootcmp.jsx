@@ -1,12 +1,23 @@
 import { HomePage } from "./pages/HomePage"
-import { ProfilePage } from "./pages/ProfilePage" // Assuming this is where you handle the user fetch
+import { ProfilePage } from "./pages/ProfilePage"
 import { NavBar } from "./cmps/NavBar"
 import { PostDetails } from "./cmps/PostDetails"
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import { Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useEffect } from "react"
 import { login, loadSuggestedUsers } from "./store/actions/user.actions"
 import { loadPosts } from "./store/actions/post.actions"
 import './assets/main.css'
+
+
+// Wrapper Component to inject the key
+function PostDetailsWrapper({ onClose }) {
+    // Get the postId from the URL path, which is defined in the <Route>
+    const { postId } = useParams();
+
+    // The key ensures React completely remounts the component 
+    // whenever the postId changes (e.g., from /post/1 to /post/2).
+    return <PostDetails key={postId} onClose={onClose} />;
+}
 
 
 export function App() { // Renamed from RootCmp if your file is named App.jsx
@@ -23,8 +34,9 @@ export function App() { // Renamed from RootCmp if your file is named App.jsx
 
     // Handler to close the modal and return to the previous page, or home
     const onClose = () => {
-        if (location.state?.background) navigate(-1) // Go back one page
-        else navigate('/') // Go to the homepage
+        // This logic is correct for navigating back
+        if (location.state?.background) navigate(-1)
+        else navigate('/')
     }
 
     // Determine if we should render the modal (i.e., if there's a background route set)
@@ -36,10 +48,7 @@ export function App() { // Renamed from RootCmp if your file is named App.jsx
 
             <main className="feed-section">
 
-                {/* Primary Routes: Renders the underlying page content. 
-                If a modal is open (background is true), this block uses the background path 
-                so the main content doesn't change when the modal URL loads.
-                */}
+                {/* Primary Routes (Renders the background page) */}
                 <Routes location={background || location}>
 
                     {/* Home Route */}
@@ -49,33 +58,28 @@ export function App() { // Renamed from RootCmp if your file is named App.jsx
                         </div>
                     } />
 
-                    {/*
-                    This route now uses the /user/ prefix and reads the :profileId parameter.
-                    The ProfilePage component must use useParams() to read this ID.
-                    */}
+                    {/* Profile Route */}
                     <Route path="/:profileId" element={
                         <div className="profile-layout">
                             <ProfilePage />
                         </div>
                     } />
 
-                    {/* The /post/:postId route is needed here so that if the user loads the post URL 
-                    directly, it loads the HomePage content underneath.
-                    */}
+                    {/* Post Route (Needed for direct link loads) */}
                     <Route path="/post/:postId" element={<HomePage />} />
                 </Routes>
 
-                {/* Modal Route: Renders the modal component ONLY if 'background' state is set. 
-                It listens specifically for the post URL path.
-                */}
+                {/* Modal Route: Renders the modal component ONLY if 'background' state is set. */}
                 {background && (
                     <Routes>
-                        <Route path="/post/:postId" element={<PostDetails onClose={onClose} />} />
+                        <Route
+                            path="/post/:postId"
+                            //  Use the new wrapper component here!
+                            element={<PostDetailsWrapper onClose={onClose} />}
+                        />
                     </Routes>
                 )}
             </main>
-
-
         </section>
     )
 }

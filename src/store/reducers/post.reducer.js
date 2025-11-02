@@ -1,3 +1,4 @@
+import { ALL_POSTS } from '../../../services/user.service'
 // Action Types
 export const SET_POSTS = 'SET_POSTS'
 export const ADD_POST = 'ADD_POST'
@@ -15,7 +16,7 @@ export const ADD_POST_TO_USER = 'ADD_POST_TO_USER'
 
 // Initial State
 const initialState = {
-    posts: [],
+    posts: ALL_POSTS,
     lastPosts: [],
     flag: {
         isLoading: false,
@@ -107,6 +108,9 @@ export function postReducer(state = initialState, action = {}) {
         case TOGGLE_COMMENT_LIKE:
             const userToToggleCommentLike = action.user
             posts = state.posts.map(post => {
+                // 🏆 CRITICAL FIX: Only run the complex mapping logic on the target post.
+                if (post._id !== action.postId) return post
+
                 const updatedComments = (post.comments || []).map(comment => {
                     // Find the correct Comment within the Post
                     if (comment._id !== action.commentId) return comment

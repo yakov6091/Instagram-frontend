@@ -1,18 +1,15 @@
-// --- MOCK DATA GENERATION HELPERS (Now properly defined) ---
+// --- MOCK DATA GENERATION HELPERS (As provided by you) ---
 const names = ['Kai', 'Sasha', 'Leo', 'Mia', 'Jax', 'Zoe', 'Finn', 'Nala', 'Ryu', 'Skye'];
 const commentTexts = ['Wow Wow!', 'Great shot!', 'I Love this!', 'Amazing picture', 'So cool.', 'Where is this?', 'Nice One!', 'Awesome view', 'We have to go there', 'What a picture', 'What a PROO', 'Continue with the great work!'];
 
 const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const getRandomId = () => Math.random().toString(36).substring(2, 9);
-const getRandomName = (arr) => arr[getRandomInt(0, arr.length - 1)]; // The missing function!
+const getRandomName = (arr) => arr[getRandomInt(0, arr.length - 1)];
 
-// Hardcoded ID for the logged-in user (for exclusion)
 const CURRENT_USER_ID = 'u101';
 
-// Helper to create a user mini-profile for 'following'/'followers' arrays
 const createMiniProfile = (idPrefix, userIdx, index) => {
     const randomName = getRandomName(names);
-    // Make the id deterministic and include userIdx to avoid collisions across multiple users
     const id = `${idPrefix}-${userIdx}-${index}-${getRandomId()}`;
     const gender = index % 2 === 0 ? 'men' : 'women'
     const avatarId = getRandomInt(1, 99)
@@ -25,7 +22,6 @@ const createMiniProfile = (idPrefix, userIdx, index) => {
 }
 
 const createMockComment = (postId, cIndex) => {
-    // 0 to 3 likes per comment
     const likeCount = getRandomInt(0, 3);
     return {
         _id: `c-${postId}-${cIndex}-${getRandomId()}`,
@@ -37,9 +33,6 @@ const createMockComment = (postId, cIndex) => {
     };
 };
 
-/**
- * Generates 10 detailed mock users for suggestion, adhering to the required format.
- */
 function generateMockUsers(count = 10) {
     const detailedUsers = [];
     const usedUsernames = new Set();
@@ -53,7 +46,6 @@ function generateMockUsers(count = 10) {
         }
         usedUsernames.add(username);
 
-        // Ensure unique userId
         let userId = `r${getRandomId()}`;
         while (usedUserIds.has(userId)) userId = `r${getRandomId()}`;
         usedUserIds.add(userId);
@@ -61,10 +53,8 @@ function generateMockUsers(count = 10) {
         const userFullname = `${randomName} ${getRandomName(['Rider', 'Hiker', 'Chef', 'Dev'])}`;
         const userImgUrl = `https://randomuser.me/api/portraits/${i % 2 === 0 ? 'men' : 'women'}/${getRandomInt(1, 99)}.jpg`;
 
-
         const followerCount = getRandomInt(1, 10)
         const followingCount = getRandomInt(1, 10)
-
         const postCount = getRandomInt(3, 5);
 
         const user = {
@@ -81,10 +71,14 @@ function generateMockUsers(count = 10) {
                     createMockComment(postId, cIndex)
                 );
 
+                // 🌟 FIX: Use a single, stable seed for both thumbnail and full image
+                const imageSeed = `${userId}-${pIndex}-post`;
+
                 return {
                     _id: postId,
-                    thumbnailUrl: `https://picsum.photos/seed/${i * 10 + pIndex}/300/300`,
-                    imgUrl: `https://picsum.photos/seed/${i * 10 + pIndex}900/900`,
+                    // Use the same seed for both URLs to guarantee the same image content
+                    thumbnailUrl: `https://picsum.photos/seed/${imageSeed}/300/300`,
+                    imgUrl: `https://picsum.photos/seed/${imageSeed}/900/900`,
                     isVideo: Math.random() < 0.2,
                     createdAt: Date.now() - (pIndex * 1000 * 60 * 60),
 
@@ -105,10 +99,8 @@ function generateMockUsers(count = 10) {
                 };
             }),
 
-            // --- VARIABLES ARE NOW DEFINED AND CAN BE USED HERE ---
             following: Array.from({ length: followingCount }, (_, fIndex) => createMiniProfile('uF', i, fIndex)),
             followers: Array.from({ length: followerCount }, (_, fIndex) => createMiniProfile('uR', i, fIndex)),
-
             likedPostIds: Array.from({ length: getRandomInt(3, 5) }, () => `s${getRandomId()}`),
             savedPostIds: Array.from({ length: getRandomInt(3, 5) }, () => `s${getRandomId()}`),
         };
@@ -118,13 +110,72 @@ function generateMockUsers(count = 10) {
     return detailedUsers;
 }
 
+//  Generate Data Statically Once
+//  Generate the set of random users
+const MOCK_USERS = generateMockUsers(10);
 
-// In user.service.js, update the export:
+//  Define the currently logged-in user with specific content (like in your screenshots)
+const loggedInUser = {
+    _id: CURRENT_USER_ID,
+    username: 'james87',
+    fullname: 'James Rider',
+    imgUrl: 'https://randomuser.me/api/portraits/men/87.jpg', // User profile image
+    bio: 'Welcome to my profile! Explorer of beautiful sights.',
+
+    // Manually defined posts for James87 to ensure consistency
+    posts: [
+        {
+            _id: `${CURRENT_USER_ID}-p0`,
+            thumbnailUrl: `https://picsum.photos/seed/wolf-coyote/300/300`,
+            imgUrl: `https://picsum.photos/seed/wolf-coyote/900/900`,
+            txt: 'The desert guardian.',
+            by: { _id: CURRENT_USER_ID, username: 'james87', fullname: 'James Rider', imgUrl: 'https://randomuser.me/api/portraits/men/87.jpg' },
+            likedBy: Array.from({ length: 5 }, (_, lIndex) => createMiniProfile('pLike', CURRENT_USER_ID, lIndex)),
+            comments: Array.from({ length: 3 }, (_, cIndex) => createMockComment(`${CURRENT_USER_ID}-p0`, cIndex)),
+        },
+        {
+            _id: `${CURRENT_USER_ID}-p1`,
+            thumbnailUrl: `https://picsum.photos/seed/grapes-hand/300/300`,
+            imgUrl: `https://picsum.photos/seed/grapes-hand/900/900`,
+            txt: 'Fresh harvest!',
+            by: { _id: CURRENT_USER_ID, username: 'james87', fullname: 'James Rider', imgUrl: 'https://randomuser.me/api/portraits/men/87.jpg' },
+            likedBy: Array.from({ length: 7 }, (_, lIndex) => createMiniProfile('pLike', CURRENT_USER_ID, lIndex)),
+            comments: Array.from({ length: 4 }, (_, cIndex) => createMockComment(`${CURRENT_USER_ID}-p1`, cIndex)),
+        },
+        {
+            _id: `${CURRENT_USER_ID}-p2`,
+            thumbnailUrl: `https://picsum.photos/seed/window-birds/300/300`,
+            imgUrl: `https://picsum.photos/seed/window-birds/900/900`,
+            txt: 'A nice view from here.',
+            by: { _id: CURRENT_USER_ID, username: 'james87', fullname: 'James Rider', imgUrl: 'https://randomuser.me/api/portraits/men/87.jpg' },
+            likedBy: Array.from({ length: 2 }, (_, lIndex) => createMiniProfile('pLike', CURRENT_USER_ID, lIndex)),
+            comments: Array.from({ length: 1 }, (_, cIndex) => createMockComment(`${CURRENT_USER_ID}-p2`, cIndex)),
+        },
+    ],
+    following: Array.from({ length: 2 }, (_, i) => createMiniProfile('uF', CURRENT_USER_ID, i)),
+    followers: Array.from({ length: 1 }, (_, i) => createMiniProfile('uR', CURRENT_USER_ID, i)),
+    savedPostIds: [],
+    likedPostIds: [],
+};
+
+// Create the final static array of all users
+const ALL_USERS = [...MOCK_USERS.filter(u => u._id !== CURRENT_USER_ID), loggedInUser];
+
+// Create a flat, static array of ALL posts for the post store
+export const ALL_POSTS = ALL_USERS.flatMap(u => u.posts);
+
+
+// Exported Service Functions
 export const userService = {
-    generateMockUsers,
-    // Add a simple caching mechanism for lookup
+    // This is now SAFE: it searches the static ALL_USERS array
     getByIdOrUsername: (id) => {
-        const users = generateMockUsers(10) // Regenerate mock data
-        return users.find(u => u._id === id || u.username === id)
+        return ALL_USERS.find(u => u._id === id || u.username === id)
+    },
+    getLoggedinUser: () => {
+        return loggedInUser
+    },
+    // You might want a function to get all users
+    getUsers: () => {
+        return ALL_USERS
     }
 };
