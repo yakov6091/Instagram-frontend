@@ -13,7 +13,7 @@ export function HomePage() {
         loadPosts()
     }, [])
 
-    if (isLoading) return <div>Loading posts...</div>
+    if (isLoading) return <div>Loading postsss...</div>
 
     return (
         <>
